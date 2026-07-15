@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Crea tu cuenta - INCOEX</title>
+    <title>INCOEX - Registro y Verificación</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -39,16 +39,28 @@
             padding: 2rem 1rem;
         }
 
-        /* Logo Area */
+        /* Vistas para la transición */
+        #register-view {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
+
+        #verification-view {
+            display: none; /* Oculto por defecto */
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            margin-top: 2rem;
+        }
+
+        /* --- ESTILOS DE LA PANTALLA DE REGISTRO --- */
         .logo-container {
             margin-bottom: 2rem;
             display: flex;
             align-items: center;
             gap: 10px;
-        }
-        
-        .logo-container img {
-            height: 35px;
         }
 
         .logo-text {
@@ -75,7 +87,6 @@
             font-style: italic;
         }
 
-        /* Card Container */
         .card {
             background-color: var(--bg-card);
             border: 1px solid var(--border-color);
@@ -102,7 +113,6 @@
             line-height: 1.5;
         }
 
-        /* Form Inputs */
         .input-group {
             position: relative;
             margin-bottom: 1.25rem;
@@ -150,11 +160,6 @@
             font-size: 0.9rem;
         }
 
-        .input-wrapper input::placeholder {
-            color: #525863;
-        }
-
-        /* Checkbox */
         .checkbox-group {
             display: flex;
             align-items: flex-start;
@@ -194,7 +199,6 @@
             font-weight: 500;
         }
 
-        /* Submit Button */
         .submit-btn {
             background-color: var(--primary-blue);
             color: white;
@@ -217,7 +221,6 @@
             background-color: var(--primary-blue-hover);
         }
 
-        /* Divider */
         .divider {
             display: flex;
             align-items: center;
@@ -237,7 +240,6 @@
         .divider::before { margin-right: 1em; }
         .divider::after { margin-left: 1em; }
 
-        /* Social Login */
         .social-login {
             display: flex;
             justify-content: center;
@@ -268,7 +270,6 @@
             color: var(--primary-blue);
         }
 
-        /* Login Link */
         .login-link {
             text-align: center;
             font-size: 0.85rem;
@@ -281,7 +282,6 @@
             font-weight: 500;
         }
 
-        /* Footer Info */
         .footer-info {
             display: flex;
             justify-content: space-between;
@@ -301,114 +301,284 @@
             color: var(--text-muted);
             text-decoration: none;
         }
+
+        /* --- ESTILOS DE LA PANTALLA DE VERIFICACIÓN --- */
+        .shield-icon {
+            font-size: 3rem;
+            color: var(--primary-blue);
+            margin-bottom: 1.5rem;
+            filter: drop-shadow(0 0 20px rgba(59, 130, 246, 0.4));
+        }
+
+        .verify-title {
+            font-size: 1.6rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 0.8rem;
+        }
+
+        .verify-subtitle {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            text-align: center;
+            line-height: 1.5;
+            max-width: 350px;
+            margin-bottom: 2rem;
+        }
+
+        .code-inputs {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 1.5rem;
+        }
+
+        .code-input {
+            width: 50px;
+            height: 60px;
+            background-color: var(--bg-input);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 1.5rem;
+            text-align: center;
+            font-weight: 600;
+            transition: all 0.3s;
+            outline: none;
+        }
+
+        .code-input:focus {
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 10px rgba(59, 130, 246, 0.2);
+        }
+
+        .timer {
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            margin-bottom: 1rem;
+        }
+
+        .timer .time {
+            color: var(--primary-blue);
+            font-weight: 600;
+        }
+
+        .resend {
+            text-align: center;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+        }
+
+        .resend a {
+            color: var(--label-color);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .verify-footer {
+            margin-top: 2.5rem;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            line-height: 1.6;
+        }
+
+        .footer-links-inline {
+            margin-top: 0.5rem;
+        }
+        
+        .footer-links-inline a {
+            color: var(--text-muted);
+            text-decoration: none;
+            margin: 0 0.5rem;
+        }
     </style>
 </head>
 <body>
 
-    <!-- Logo placeholder -->
-    <div class="logo-container">
-        <span class="logo-x">X</span>
-        <div class="logo-text">
-            INCOEX
-            <span>Logistics</span>
+    <!-- ==========================================
+         VISTA 1: CREAR CUENTA
+         ========================================== -->
+    <div id="register-view">
+        <div class="logo-container">
+            <span class="logo-x">X</span>
+            <div class="logo-text">
+                INCOEX
+                <span>Logistics</span>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h1>Crea tu cuenta</h1>
+                <p>Únete a la red logística global de INCOEX.</p>
+            </div>
+
+            <!-- Se agregó el id="register-form" para capturarlo con JS -->
+            <form id="register-form">
+                <div class="input-group">
+                    <label>NOMBRE COMPLETO</label>
+                    <div class="input-wrapper">
+                        <i class="fa-regular fa-user"></i>
+                        <input type="text" placeholder="Juan Pérez" required>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label>EMPRESA</label>
+                    <div class="input-wrapper">
+                        <i class="fa-regular fa-building"></i>
+                        <input type="text" placeholder="Logistics Corp S.A.">
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label>CORREO ELECTRÓNICO</label>
+                    <div class="input-wrapper">
+                        <i class="fa-regular fa-envelope"></i>
+                        <input type="email" placeholder="ejemplo@gmail.com" required>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label>TELÉFONO</label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-phone"></i>
+                        <input type="tel" placeholder="+34 000 000 000">
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label>CONTRASEÑA</label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-lock"></i>
+                        <input type="password" placeholder="••••••••" required>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label>CONFIRMAR CONTRASEÑA</label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-shield-halved"></i>
+                        <input type="password" placeholder="••••••••" required>
+                    </div>
+                </div>
+
+                <div class="checkbox-group">
+                    <input type="checkbox" id="terms" required>
+                    <label for="terms">
+                        Acepto los <a href="#">términos y condiciones</a> de uso y la política de privacidad de INCOEX.
+                    </label>
+                </div>
+
+                <button type="submit" class="submit-btn">
+                    Crear Cuenta <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </form>
+
+            <div class="divider">O REGÍSTRATE CON</div>
+
+            <div class="social-login">
+                <button class="social-btn" type="button">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" alt="Google" width="20">
+                </button>
+                <button class="social-btn" type="button">
+                    <i class="fa-solid fa-grip"></i>
+                </button>
+                <button class="social-btn blue-icon" type="button">
+                    <i class="fa-solid fa-circle-nodes"></i>
+                </button>
+            </div>
+
+            <div class="login-link">
+                ¿Ya tienes una cuenta? <a href="#">Iniciar Sesión</a>
+            </div>
+        </div>
+
+        <div class="footer-info">
+            <div><i class="fa-solid fa-lock"></i> Encriptación 256-bit</div>
+            <div class="footer-links">
+                <a href="#">Soporte</a>
+                <a href="#">Legal</a>
+            </div>
         </div>
     </div>
 
-    <!-- Main Card -->
-    <div class="card">
-        <div class="card-header">
-            <h1>Crea tu cuenta</h1>
-            <p>Únete a la red logística global de INCOEX.</p>
+    <!-- ==========================================
+         VISTA 2: VERIFICACIÓN DE IDENTIDAD
+         ========================================== -->
+    <div id="verification-view">
+        <div class="shield-icon">
+            <i class="fa-solid fa-shield-heart"></i>
         </div>
+        
+        <h1 class="verify-title">Verificación de<br>Identidad</h1>
+        <p class="verify-subtitle">Hemos enviado un código de seguridad de 6 dígitos a su correo electrónico asociado.</p>
 
-        <form action="#">
-            <div class="input-group">
-                <label>NOMBRE COMPLETO</label>
-                <div class="input-wrapper">
-                    <i class="fa-regular fa-user"></i>
-                    <input type="text" placeholder="Juan Pérez" required>
-                </div>
+        <div class="card">
+            <div class="code-inputs">
+                <!-- Se generan 6 casillas para los 6 dígitos -->
+                <input type="text" maxlength="1" class="code-input" autofocus>
+                <input type="text" maxlength="1" class="code-input">
+                <input type="text" maxlength="1" class="code-input">
+                <input type="text" maxlength="1" class="code-input">
+                <input type="text" maxlength="1" class="code-input">
+                <input type="text" maxlength="1" class="code-input">
             </div>
-
-            <div class="input-group">
-                <label>EMPRESA</label>
-                <div class="input-wrapper">
-                    <i class="fa-regular fa-building"></i>
-                    <input type="text" placeholder="Logistics Corp S.A.">
-                </div>
+            
+            <div class="timer">
+                <i class="fa-regular fa-clock"></i> El código expira en: <span class="time">01:58</span>
             </div>
-
-            <div class="input-group">
-                <label>CORREO ELECTRÓNICO</label>
-                <div class="input-wrapper">
-                    <i class="fa-regular fa-envelope"></i>
-                    <input type="email" placeholder="ejemplo@gmail.com" required>
-                </div>
+            
+            <div class="resend">
+                ¿No recibiste el código? <a href="#">Reenviar código</a>
             </div>
-
-            <div class="input-group">
-                <label>TELÉFONO</label>
-                <div class="input-wrapper">
-                    <i class="fa-solid fa-phone"></i>
-                    <input type="tel" placeholder="+34 000 000 000">
-                </div>
-            </div>
-
-            <div class="input-group">
-                <label>CONTRASEÑA</label>
-                <div class="input-wrapper">
-                    <i class="fa-solid fa-lock"></i>
-                    <input type="password" placeholder="••••••••" required>
-                </div>
-            </div>
-
-            <div class="input-group">
-                <label>CONFIRMAR CONTRASEÑA</label>
-                <div class="input-wrapper">
-                    <i class="fa-solid fa-shield-halved"></i>
-                    <input type="password" placeholder="••••••••" required>
-                </div>
-            </div>
-
-            <div class="checkbox-group">
-                <input type="checkbox" id="terms" required>
-                <label for="terms">
-                    Acepto los <a href="#">términos y condiciones</a> de uso y la política de privacidad de INCOEX.
-                </label>
-            </div>
-
-            <button type="submit" class="submit-btn">
-                Crear Cuenta <i class="fa-solid fa-arrow-right"></i>
-            </button>
-        </form>
-
-        <div class="divider">O REGÍSTRATE CON</div>
-
-        <div class="social-login">
-            <button class="social-btn" type="button">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" alt="Google" width="20">
-            </button>
-            <button class="social-btn" type="button">
-                <i class="fa-solid fa-grip"></i>
-            </button>
-            <button class="social-btn blue-icon" type="button">
-                <i class="fa-solid fa-circle-nodes"></i>
+            
+            <button type="button" class="submit-btn">
+                Verificar <i class="fa-solid fa-arrow-right"></i>
             </button>
         </div>
 
-        <div class="login-link">
-            ¿Ya tienes una cuenta? <a href="#">Iniciar Sesión</a>
+        <div class="verify-footer">
+            <p>© 2026 INCOEX Logistics. Seguridad Empresarial.</p>
+            <div class="footer-links-inline">
+                <a href="#">Soporte</a> &bull; <a href="#">Privacidad</a>
+            </div>
         </div>
     </div>
 
-    <!-- Footer -->
-    <div class="footer-info">
-        <div><i class="fa-solid fa-lock"></i> Encriptación 256-bit</div>
-        <div class="footer-links">
-            <a href="#">Soporte</a>
-            <a href="#">Legal</a>
-        </div>
-    </div>
+    <!-- SCRIPT PARA MANEJAR LA LÓGICA -->
+    <script>
+        // Transición de pantallas
+        document.getElementById('register-form').addEventListener('submit', function(e) {
+            e.preventDefault(); // Evita que la página se recargue
+            
+            // Ocultar formulario de registro
+            document.getElementById('register-view').style.display = 'none';
+            
+            // Mostrar formulario de verificación
+            document.getElementById('verification-view').style.display = 'flex';
+        });
 
+        // Lógica para saltar automáticamente al siguiente input de verificación
+        const codeInputs = document.querySelectorAll('.code-input');
+        
+        codeInputs.forEach((input, index) => {
+            input.addEventListener('input', () => {
+                if(input.value.length === 1 && index < codeInputs.length - 1) {
+                    codeInputs[index + 1].focus();
+                }
+            });
+
+            // Permite borrar con Backspace y regresar al input anterior
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Backspace' && input.value.length === 0 && index > 0) {
+                    codeInputs[index - 1].focus();
+                }
+            });
+        });
+    </script>
 </body>
 </html>

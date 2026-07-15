@@ -165,22 +165,24 @@
         }
 
         .btn-primary {
-            width: 100%;
-            background: linear-gradient(135deg, #273b53 0%, #1e2e42 100%);
-            color: #ffffff;
-            border: 1px solid #3b4d66;
-            padding: 14px;
-            border-radius: 12px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: opacity 0.3s;
-        }
+    width: 100%;
+    display: block;
+    text-align: center;
+    text-decoration: none;
+    background: linear-gradient(135deg, #273b53 0%, #1e2e42 100%);
+    color: #ffffff;
+    border: 1px solid #3b4d66;
+    padding: 14px;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.3s;
+}
 
-        .btn-primary:hover {
-            opacity: 0.9;
-        }
-
+.btn-primary:hover {
+    opacity: 0.9;
+}
         .divider {
             display: flex;
             align-items: center;
@@ -296,12 +298,9 @@
             </div>
 
             <!-- BOTON CON REDIRECCION A dashboard.html -->
-           <button
-    type="button"
-    class="btn-primary"
-    onclick="window.location.href='dashboard.html'">
+          <a href="dashboard.html" class="btn-primary">
     Iniciar Sesión
-</button>
+</a>
         </form>
 
         <div class="divider">

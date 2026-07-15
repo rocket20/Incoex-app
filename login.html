@@ -268,8 +268,8 @@
             <p>Accede a tu panel de control</p>
         </div>
 
-        <!-- CAMBIO 1: action apunta directamente a dashboard.html -->
-        <form action="dashboard.html" method="GET">
+        <!-- El form NO tiene action para evitar conflictos, el boton maneja la redireccion -->
+        <form onsubmit="return false;">
             <div class="form-group">
                 <label for="email">Correo electrónico</label>
                 <div class="input-wrapper">
@@ -280,13 +280,13 @@
 
             <div class="form-group">
                 <div class="label-row">
-                    <label for="password">Contrasena</label>
-                    <a href="#">Olvido su contrasena?</a>
+                    <label for="password">Contraseña</label>
+                    <a href="#">¿Olvidó su contraseña?</a>
                 </div>
                 <div class="input-wrapper">
                     <i class="fa-solid fa-lock icon-left"></i>
                     <input type="password" id="password" placeholder="••••••••••••" required>
-                    <i class="fa-regular fa-eye-slash icon-right"></i>
+                    <i class="fa-regular fa-eye-slash icon-right" id="togglePassword"></i>
                 </div>
             </div>
 
@@ -295,8 +295,13 @@
                 <label for="remember">Recordarme</label>
             </div>
 
-            <!-- CAMBIO 2: type="submit" para que el form procese el action correctamente -->
-            <button type="submit" class="btn-primary">Iniciar Sesión</button>
+            <!-- BOTON CON REDIRECCION A dashboard.html -->
+            <button
+                type="button"
+                class="btn-primary"
+                onclick="window.location.href='dashboard.html'">
+                Iniciar Sesión
+            </button>
         </form>
 
         <div class="divider">
@@ -312,15 +317,33 @@
             </button>
         </div>
 
-        <!-- CAMBIO 3: href apunta a registro.html -->
+        <!-- ENLACE DE REGISTRO A registro.html -->
         <div class="register-link">
-            No tienes una cuenta? <a href="registro.html">Crear Cuenta</a>
+            ¿No tienes una cuenta? <a href="registro.html">Crear Cuenta</a>
         </div>
     </div>
 
     <div class="footer-copy">
         © 2026 INCOEX Logistics. Todos los derechos reservados.
     </div>
+
+    <script>
+        // Toggle mostrar/ocultar contraseña
+        const togglePassword = document.getElementById('togglePassword');
+        const passwordInput = document.getElementById('password');
+
+        togglePassword.addEventListener('click', function () {
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                this.classList.remove('fa-eye-slash');
+                this.classList.add('fa-eye');
+            } else {
+                passwordInput.type = 'password';
+                this.classList.remove('fa-eye');
+                this.classList.add('fa-eye-slash');
+            }
+        });
+    </script>
 
 </body>
 </html>

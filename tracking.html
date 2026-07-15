@@ -247,9 +247,8 @@
         .bottom-nav { position: fixed; bottom: 0; width: 100%; max-width: 450px; background-color: var(--nav-bg); display: flex; justify-content: space-around; align-items: center; padding: 10px 10px 20px; border-top: 1px solid var(--border-color); z-index: 100; }
         .nav-item { display: flex; flex-direction: column; align-items: center; gap: 6px; color: var(--text-muted); text-decoration: none; font-size: 10px; cursor: pointer; transition: 0.3s; }
         .nav-item i { font-size: 18px; }
-        .nav-item.prominent { background-color: var(--primary-blue); color: white; width: 55px; height: 55px; border-radius: 50%; justify-content: center; transform: translateY(-20px); box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4); border: 4px solid var(--bg-color); gap: 2px; }
-        .nav-item.prominent i { font-size: 20px; }
-        .nav-item:not(.prominent):hover { color: var(--text-main); }
+        .nav-item:hover {
+        color: var(--text-main);}
 
         /* Toast notification */
         .toast {
@@ -437,24 +436,33 @@
     </button>
 
     <nav class="bottom-nav">
-        <div class="nav-item" onclick="window.location.href='dashboard.html'">
-            <i class="fa-solid fa-house"></i>
-            <span>Inicio</span>
-        </div>
-        <div class="nav-item" onclick="showToast('Seccion de Viajes')">
-            <i class="fa-solid fa-truck"></i>
-            <span>Viajes</span>
-        </div>
-        <div class="nav-item prominent">
-            <i class="fa-solid fa-location-dot"></i>
-            <span>Tracking</span>
-        </div>
-        <div class="nav-item" onclick="showToast('Seccion de Perfil')">
-            <i class="fa-regular fa-user"></i>
-            <span>Perfil</span>
-        </div>
-    </nav>
+
+    <div class="nav-item" onclick="window.location.href='dashboard.html'">
+        <i class="fa-solid fa-house"></i>
+        <span>Inicio</span>
+    </div>
+
+    <div class="nav-item">
+        <i class="fa-regular fa-file-lines"></i>
+        <span>Solicitudes</span>
+    </div>
+
+    <div class="nav-item active">
+    <i class="fa-solid fa-location-dot"></i>
+    <span>Tracking</span>
 </div>
+
+    <div class="nav-item">
+        <i class="fa-solid fa-clock-rotate-left"></i>
+        <span>Historial</span>
+    </div>
+
+    <div class="nav-item">
+        <i class="fa-regular fa-user"></i>
+        <span>Perfil</span>
+    </div>
+
+</nav>
 
 <!-- Toast notification -->
 <div class="toast" id="toast"></div>

@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>INCOEX - Tracking Activo</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+        :root {
+            --bg-color: #111315;
+            --card-bg: #1c1f22;
+            --input-bg: #151719;
+            --text-main: #ffffff;
+            --text-muted: #8b929b;
+            --primary-blue: #3b82f6;
+            --border-color: #2a2e33;
+            --nav-bg: #111315;
+            --success-green: #10b981;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background-color: var(--bg-color); color: var(--text-main); display: flex; justify-content: center; }
+
+        .app-container { width: 100%; max-width: 450px; background-color: var(--bg-color); min-height: 100vh; position: relative; padding-bottom: 90px; box-shadow: 0 0 30px rgba(0,0,0,0.8); }
+
+        /* Top Nav */
+        .top-nav { background-color: var(--nav-bg); padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); position: sticky; top: 0; z-index: 100; }
+        .nav-left { display: flex; align-items: center; gap: 15px; }
+        .back-btn { color: var(--text-main); font-size: 18px; cursor: pointer; text-decoration: none; }
+        .logo { font-weight: 700; font-size: 16px; color: var(--primary-blue); }
+        .logo span { color: white; }
+        .user-actions { display: flex; align-items: center; gap: 15px; }
+        
+        .notification-badge { position: relative; }
+        .notification-badge::after { content: '3'; position: absolute; top: -5px; right: -5px; background: var(--primary-blue); color: white; font-size: 9px; font-weight: bold; width: 14px; height: 14px; border-radius: 50%; display: flex; justify-content: center; align-items: center; }
+
+        /* Header Info */
+        .order-header { padding: 20px; display: flex; justify-content: space-between; align-items: flex-start; }
+        .order-info { display: flex; gap: 12px; }
+        .order-icon { width: 36px; height: 36px; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 10px; display: flex; justify-content: center; align-items: center; color: var(--text-muted); }
+        .order-info h2 { font-size: 16px; margin-bottom: 4px; }
+        .order-route { font-size: 12px; color: var(--text-muted); display: flex; align-items: center; gap: 8px; }
+        .status-badge { background-color: rgba(59, 130, 246, 0.15); color: var(--primary-blue); padding: 6px 12px; border-radius: 20px; font-size: 11px; font-weight: 600; display: flex; align-items: center; gap: 6px; }
+        .status-badge i { font-size: 8px; animation: pulseStatus 2s infinite; }
+
+        @keyframes pulseStatus { 0% { opacity: 0.4; } 50% { opacity: 1; box-shadow: 0 0 8px var(--primary-blue); } 100% { opacity: 0.4; } }
+
+        /* Map Animation Container */
+        .map-container { 
+            height: 220px; margin: 0 20px; border-radius: 16px; position: relative; overflow: hidden;
+            background: radial-gradient(circle at center, #2a2e33 0%, #151719 100%);
+            border: 1px solid var(--border-color);
+            display: flex; justify-content: center; align-items: center;
+        }
+        
+        /* Grid de fondo simulando mapa */
+        .map-grid { position: absolute; width: 100%; height: 100%; background-image: linear-gradient(var(--border-color) 1px, transparent 1px), linear-gradient(90deg, var(--border-color) 1px, transparent 1px); background-size: 30px 30px; opacity: 0.2; }
+
+        /* SVG Ruta Animada */
+        .route-svg { position: absolute; width: 100%; height: 100%; top: 0; left: 0; }
+        .route-path-bg { fill: none; stroke: rgba(255,255,255,0.1); stroke-width: 4; }
+        .route-path-active { fill: none; stroke: var(--primary-blue); stroke-width: 4; stroke-dasharray: 12 12; animation: flowRoute 1.5s linear infinite; }
+        
+        @keyframes flowRoute { to { stroke-dashoffset: -24; } }
+
+        /* Pines del mapa */
+        .map-pin { position: absolute; display: flex; flex-direction: column; align-items: center; gap: 4px; z-index: 2; }
+        .map-pin.origin { left: 15%; top: 60%; }
+        .map-pin.destination { right: 15%; top: 20%; }
+        .map-pin.truck { left: 55%; top: 38%; animation: floatTruck 2s ease-in-out infinite; }
+
+        @keyframes floatTruck { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
+
+        .pin-dot { width: 14px; height: 14px; background: var(--primary-blue); border-radius: 50%; box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.3); }
+        .pin-label { background: var(--card-bg); padding: 4px 8px; border-radius: 8px; font-size: 10px; font-weight: 600; border: 1px solid var(--border-color); }
+        .truck-icon { width: 32px; height: 32px; background: var(--card-bg); border: 2px solid var(--primary-blue); border-radius: 50%; display: flex; justify-content: center; align-items: center; color: white; font-size: 14px; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
+        .target-icon { position: absolute; top: 15px; right: 15px; width: 35px; height: 35px; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 50%; display: flex; justify-content: center; align-items: center; color: var(--text-main); font-size: 14px; z-index: 3; }
+
+        /* Stats Grid */
+        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; padding: 20px; }
+        .stat-card { background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; padding: 15px 10px; text-align: center; }
+        .stat-card i { color: var(--text-muted); margin-bottom: 10px; font-size: 18px; }
+        .stat-card p { font-size: 10px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 4px; font-weight: 600; }
+        .stat-card h4 { font-size: 14px; margin-bottom: 2px; }
+        .stat-card span { font-size: 11px; color: var(--text-muted); }
+
+        /* Driver Info */
+        .driver-card { background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; padding: 15px; margin: 0 20px 20px; display: flex; justify-content: space-between; align-items: center; }
+        .driver-left { display: flex; align-items: center; gap: 15px; }
+        .driver-avatar { width: 45px; height: 45px; background-color: #374151; border-radius: 50%; display: flex; justify-content: center; align-items: center; overflow: hidden; }
+        .driver-avatar img { width: 100%; height: 100%; object-fit: cover; }
+        .driver-info p.label { font-size: 10px; color: var(--text-muted); text-transform: uppercase; font-weight: 600; margin-bottom: 2px; }
+        .driver-info h4 { font-size: 14px; margin-bottom: 4px; }
+        .driver-info p.vehicle { font-size: 11px; color: var(--text-muted); display: flex; align-items: center; gap: 6px; }
+        .plate-badge { background-color: var(--input-bg); border: 1px solid var(--border-color); padding: 2px 6px; border-radius: 6px; font-size: 10px; font-weight: 600; color: var(--text-main); }
+        .btn-call { width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--primary-blue); color: var(--primary-blue); background: rgba(59, 130, 246, 0.1); font-size: 16px; cursor: pointer; display: flex; justify-content: center; align-items: center; transition: 0.3s; }
+        .btn-call:hover { background: var(--primary-blue); color: white; }
+
+        /* Timeline Horizontal */
+        .timeline-card { background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; padding: 20px 10px; margin: 0 20px 20px; overflow-x: auto; }
+        .timeline { display: flex; justify-content: space-between; position: relative; min-width: 320px; padding: 0 10px; }
+        
+        .timeline-line { position: absolute; top: 16px; left: 30px; right: 30px; height: 2px; background-color: var(--border-color); z-index: 1; }
+        .timeline-progress { position: absolute; top: 16px; left: 30px; width: 70%; height: 2px; background-color: var(--primary-blue); z-index: 2; }
+        
+        .step { display: flex; flex-direction: column; align-items: center; position: relative; z-index: 3; width: 25%; gap: 6px; }
+        .step-icon { width: 34px; height: 34px; border-radius: 50%; background-color: var(--card-bg); border: 2px solid var(--border-color); color: var(--text-muted); display: flex; justify-content: center; align-items: center; font-size: 12px; transition: 0.3s; }
+        
+        /* Estados del step */
+        .step.completed .step-icon { background-color: var(--primary-blue); border-color: var(--primary-blue); color: white; }
+        .step.active .step-icon { background-color: var(--card-bg); border-color: var(--primary-blue); color: var(--primary-blue); box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2); }
+        
+        .step h5 { font-size: 10px; text-align: center; font-weight: 600; color: var(--text-muted); }
+        .step.completed h5, .step.active h5 { color: var(--text-main); }
+        .step p { font-size: 9px; color: var(--text-muted); text-align: center; }
+
+        /* Evidencias */
+        .section-header { display: flex; justify-content: space-between; align-items: center; margin: 0 20px 15px; }
+        .section-header h3 { font-size: 14px; display: flex; align-items: center; gap: 8px; }
+        .evidences-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 0 20px 20px; }
+        .evidence-card { background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; overflow: hidden; padding-bottom: 12px; }
+        .evidence-img { height: 90px; background-color: var(--input-bg); display: flex; justify-content: center; align-items: center; color: var(--border-color); font-size: 30px; }
+        .evidence-info { padding: 10px 12px 0; }
+        .evidence-info h5 { font-size: 11px; margin-bottom: 4px; }
+        .evidence-info p { font-size: 10px; color: var(--text-muted); margin-bottom: 8px; }
+        .badge-verified { display: inline-flex; align-items: center; gap: 4px; background-color: rgba(16, 185, 129, 0.15); color: var(--success-green); padding: 4px 8px; border-radius: 4px; font-size: 9px; font-weight: 600; }
+
+        /* Tarifa Box */
+        .price-box { background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; padding: 20px; margin: 0 20px 20px; display: flex; justify-content: space-between; align-items: center; }
+        .price-left { display: flex; align-items: center; gap: 15px; }
+        .price-icon { width: 45px; height: 45px; background-color: var(--input-bg); border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 16px; font-weight: 700; border: 1px solid var(--border-color); }
+        .price-details p.label { font-size: 10px; color: var(--text-muted); text-transform: uppercase; font-weight: 600; margin-bottom: 2px; }
+        .price-details h3 { font-size: 18px; margin-bottom: 4px; }
+        .price-details p.desc { font-size: 11px; color: var(--text-muted); }
+        .btn-link { color: var(--primary-blue); font-size: 12px; text-decoration: none; font-weight: 500; display: flex; align-items: center; gap: 5px; }
+
+        /* Report Button */
+        .btn-report { background-color: transparent; border: 1px solid var(--border-color); color: var(--text-main); width: calc(100% - 40px); margin: 0 20px 20px; padding: 16px; border-radius: 16px; font-size: 13px; font-weight: 600; display: flex; justify-content: center; align-items: center; gap: 8px; cursor: pointer; transition: 0.3s; }
+        .btn-report:hover { background-color: var(--card-bg); border-color: var(--text-muted); }
+
+        /* Bottom Nav con botón central resaltado */
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; max-width: 450px; background-color: var(--nav-bg); display: flex; justify-content: space-around; align-items: center; padding: 10px 10px 20px; border-top: 1px solid var(--border-color); z-index: 100; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; gap: 6px; color: var(--text-muted); text-decoration: none; font-size: 10px; cursor: pointer; transition: 0.3s; }
+        .nav-item i { font-size: 18px; }
+        
+        .nav-item.prominent { background-color: var(--primary-blue); color: white; width: 55px; height: 55px; border-radius: 50%; justify-content: center; transform: translateY(-20px); box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4); border: 4px solid var(--bg-color); gap: 2px; }
+        .nav-item.prominent i { font-size: 20px; }
+        .nav-item:not(.prominent):hover { color: var(--text-main); }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        
+        <nav class="top-nav">
+            <div class="nav-left">
+                <a href="dashboard.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i></a>
+                <div class="logo">X<span>INCOEX</span></div>
+            </div>
+            <div class="user-actions">
+                <i class="fa-regular fa-bell notification-badge" style="color:var(--text-muted); font-size:18px;"></i>
+                <i class="fa-regular fa-circle-user" style="color:var(--text-muted); font-size:20px;"></i>
+            </div>
+        </nav>
+
+        <div class="order-header">
+            <div class="order-info">
+                <div class="order-icon"><i class="fa-solid fa-box-open"></i></div>
+                <div>
+                    <h2>#SL-2025-0458</h2>
+                    <div class="order-route">Managua <i class="fa-solid fa-arrow-right" style="font-size:10px;"></i> León</div>
+                </div>
+            </div>
+            <div class="status-badge">
+                <i class="fa-solid fa-circle"></i> En tránsito
+            </div>
+        </div>
+
+        <div class="map-container">
+            <div class="map-grid"></div>
+            
+            <svg class="route-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
+                <path class="route-path-bg" d="M 15 60 Q 40 10, 85 20" />
+                <path class="route-path-active" d="M 15 60 Q 40 10, 85 20" />
+            </svg>
+
+            <div class="target-icon"><i class="fa-solid fa-crosshairs"></i></div>
+
+            <div class="map-pin origin">
+                <div class="pin-dot"></div>
+                <div class="pin-label">Origen</div>
+            </div>
+
+            <div class="map-pin truck">
+                <div class="truck-icon"><i class="fa-solid fa-truck-fast"></i></div>
+            </div>
+
+            <div class="map-pin destination">
+                <div class="pin-dot" style="background:var(--text-muted); box-shadow: 0 0 0 4px rgba(139,146,155,0.3);"></div>
+                <div class="pin-label" style="color:var(--text-muted);">Destino</div>
+            </div>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <i class="fa-regular fa-clock"></i>
+                <p>ETA</p>
+                <h4>Hoy</h4>
+                <span>+ 30 min</span>
+            </div>
+            <div class="stat-card">
+                <i class="fa-solid fa-route"></i>
+                <p>Distancia</p>
+                <h4>68 km</h4>
+                <span>de 124 km</span>
+            </div>
+            <div class="stat-card">
+                <i class="fa-solid fa-stopwatch"></i>
+                <p>Tiempo rest.</p>
+                <h4>1h 20m</h4>
+                <span>aprox.</span>
+            </div>
+        </div>
+
+        <div class="driver-card">
+            <div class="driver-left">
+                <div class="driver-avatar">
+                    <i class="fa-solid fa-user" style="color:var(--text-muted); font-size: 24px;"></i>
+                </div>
+                <div class="driver-info">
+                    <p class="label">Conductor</p>
+                    <h4>Carlos Mendoza</h4>
+                    <p class="vehicle">
+                        <i class="fa-solid fa-truck"></i> Volvo FH 440 
+                        <span class="plate-badge">M-5678</span>
+                    </p>
+                </div>
+            </div>
+            <button class="btn-call" onclick="alert('Llamando a Carlos Mendoza...')"><i class="fa-solid fa-phone"></i></button>
+        </div>
+
+        <div class="timeline-card">
+            <div class="timeline">
+                <div class="timeline-line"></div>
+                <div class="timeline-progress"></div>
+                
+                <div class="step completed">
+                    <div class="step-icon"><i class="fa-solid fa-file-lines"></i></div>
+                    <h5>Solicitud<br>creada</h5>
+                    <p>09:00</p>
+                </div>
+                <div class="step completed">
+                    <div class="step-icon"><i class="fa-solid fa-user-check"></i></div>
+                    <h5>Asignado</h5>
+                    <p>09:15</p>
+                </div>
+                <div class="step completed">
+                    <div class="step-icon"><i class="fa-solid fa-box"></i></div>
+                    <h5>En recogida</h5>
+                    <p>10:45</p>
+                </div>
+                <div class="step active">
+                    <div class="step-icon"><i class="fa-solid fa-truck-fast"></i></div>
+                    <h5>En tránsito</h5>
+                    <p>Ahora</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-header">
+            <h3><i class="fa-solid fa-shield-halved"></i> Evidencias</h3>
+            <i class="fa-solid fa-chevron-right" style="color:var(--text-muted); font-size:12px;"></i>
+        </div>
+        <div class="evidences-grid">
+            <div class="evidence-card">
+                <div class="evidence-img"><i class="fa-solid fa-boxes-stacked"></i></div>
+                <div class="evidence-info">
+                    <h5>Foto de recogida</h5>
+                    <p>22 may 2025, 10:50</p>
+                    <span class="badge-verified"><i class="fa-solid fa-check"></i> Verificada</span>
+                </div>
+            </div>
+            <div class="evidence-card">
+                <div class="evidence-img"><i class="fa-solid fa-file-signature"></i></div>
+                <div class="evidence-info">
+                    <h5>Guía / Evidencia</h5>
+                    <p>22 may 2025, 11:00</p>
+                    <span class="badge-verified"><i class="fa-solid fa-check"></i> Verificada</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="price-box">
+            <div class="price-left">
+                <div class="price-icon">C$</div>
+                <div class="price-details">
+                    <p class="label">Valor del servicio</p>
+                    <h3>C$ 4,850</h3>
+                    <p class="desc">Mercancía general • 8.5 T</p>
+                </div>
+            </div>
+            <a href="#" class="btn-link">Ver detalles <i class="fa-solid fa-chevron-right" style="font-size:10px;"></i></a>
+        </div>
+
+        <button class="btn-report" onclick="alert('Abriendo formulario de soporte...')">
+            <i class="fa-solid fa-triangle-exclamation"></i> Reportar incidencia
+        </button>
+
+        <nav class="bottom-nav">
+            <div class="nav-item" onclick="window.location.href='dashboard.html'">
+                <i class="fa-solid fa-house"></i>
+                <span>Inicio</span>
+            </div>
+            <div class="nav-item">
+                <i class="fa-solid fa-truck"></i>
+                <span>Viajes</span>
+            </div>
+            <div class="nav-item prominent">
+                <i class="fa-solid fa-location-dot"></i>
+                <span>Tracking</span>
+            </div>
+            <div class="nav-item">
+                <i class="fa-regular fa-user"></i>
+                <span>Perfil</span>
+            </div>
+        </nav>
+
+    </div>
+
+</body>
+</html>

@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="es" class="dark"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=block" rel="stylesheet"><script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script><script id="tailwind-config">try{
+<!DOCTYPE html><html lang="es" class="dark" style=""><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=block" rel="stylesheet"><script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script><script id="tailwind-config">try{
         tailwind.config = {
             darkMode: "class",
             theme: {
@@ -36,7 +36,7 @@
                         "secondary-container": "#3994ef",
                         "on-tertiary-fixed-variant": "#005228",
                         "surface-dim": "#091421",
-                        "surface-container-low": "#111c2a",
+                        "surface-container-low": "#151719",
                         "surface-container-lowest": "#040f1c",
                         "surface-container-high": "#202b39",
                         "primary-fixed-dim": "#a9c7ff",
@@ -91,10 +91,56 @@
                 },
             },
         }
-    }catch(_e){}</script></head><body class="min-h-screen flex flex-col items-center justify-center p-md">
+    }catch(_e){}</script>
     
+    <style>
+    body {
+        background: #111315 !important;
+        color: #ffffff;
+    }
+
+    .login-card,
+    main {
+        background: transparent;
+    }
+
+    input {
+        background: #151719 !important;
+        color: white !important;
+    }
+
+    input::placeholder {
+        color: #4a5056 !important;
+    }
+
+    .gradient-button {
+        background: linear-gradient(135deg, #273b53 0%, #1e2e42 100%);
+        border: 1px solid #3b4d66;
+        color: white;
+        font-weight: 600;
+    }
+
+    .gradient-button:hover {
+        opacity: .9;
+    }
+
+    .input-glow {
+        background: #151719 !important;
+        border-color: #2a2e33 !important;
+    }
+
+    .input-glow:focus-within {
+        border-color: #3b4657 !important;
+    }
+
+    .logo-glow {
+        color: #a0bbf0 !important;
+        filter: drop-shadow(0 0 10px rgba(160,187,240,.4));
+    }
+</style>
+    </head><body class="min-h-screen flex flex-col items-center justify-center p-md" style="background:#111315; color:#ffffff;">
     <!-- Background Atmosphere -->
-    <div class="fixed inset-0 z-0">
+   <div class="fixed inset-0 z-0 bg-[#111315]">
         <div class="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-primary/10 blur-[120px]"></div>
         <div class="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-secondary/5 blur-[120px]"></div>
     </div>
@@ -103,7 +149,7 @@
     <div class="w-full max-w-[440px] z-10 flex flex-col gap-xl">
         
         <!-- Brand Identity -->
-        <header class="flex flex-col items-center justify-center gap-xs">
+        <header class="flex flex-col items-center justify-center gap-xs mt-md">
             <div class="flex items-center gap-sm">
                 <span class="material-symbols-outlined text-[40px] text-primary logo-glow" style="font-variation-settings: 'FILL' 1;">local_shipping</span>
                 <h1 class="font-headline-md text-headline-md tracking-tight text-on-surface">INCOEX <span class="font-normal text-on-surface-variant">Logistics</span></h1>
@@ -111,16 +157,16 @@
         </header>
 
         <!-- Login Container -->
-        <main class="glass-panel rounded-[32px] p-lg md:p-xl flex flex-col gap-lg">
+        <main class="flex flex-col gap-lg">
             
             <!-- Welcome Section -->
             <div class="text-center space-y-xs">
-                <h2 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface">Bienvenido Conductor</h2>
+                <h2 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface">Portal de Conductor</h2>
                 <p class="font-body-md text-body-md text-on-surface-variant opacity-80">Ingresa con tus credenciales asignadas por la empresa</p>
             </div>
 
             <!-- Form Fields -->
-            <form class="flex flex-col gap-md" onsubmit="event.preventDefault();">
+            <form class="flex flex-col gap-sm" onsubmit="event.preventDefault();">
                 
                 <!-- Email Field -->
                 <div class="flex flex-col gap-xs">
@@ -147,10 +193,7 @@
                 </div>
 
                 <!-- Remember Me -->
-                <div class="flex items-center gap-sm px-sm">
-                    <input type="checkbox" id="remember" class="w-5 h-5 rounded border-outline-variant bg-surface-container-low text-primary focus:ring-primary/20 transition-all">
-                    <label for="remember" class="font-label-md text-label-md text-on-surface-variant cursor-pointer select-none">Recordarme</label>
-                </div>
+                
 
                 <!-- Primary Action -->
                 <button type="submit" class="gradient-button w-full h-14 rounded-xl text-on-primary font-headline-md flex items-center justify-center transition-all duration-300 mt-sm">
@@ -175,11 +218,7 @@
             <p class="font-label-sm text-label-sm text-on-surface-variant text-center max-w-[300px]">
                 © 2024 INCOEX Logistics. Todos los derechos reservados.
             </p>
-            <div class="flex gap-md">
-                <a href="#" class="font-label-sm text-label-sm text-on-surface-variant hover:text-primary transition-colors">Privacidad</a>
-                <a href="#" class="font-label-sm text-label-sm text-on-surface-variant hover:text-primary transition-colors">Términos</a>
-                <a href="#" class="font-label-sm text-label-sm text-on-surface-variant hover:text-primary transition-colors">Soporte</a>
-            </div>
+            
         </footer>
 
     </div>

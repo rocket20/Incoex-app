@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>INCOEX Logistics - Dashboard Dark</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+        :root {
+            /* Paleta de colores basada en la imagen de registro */
+            --bg-color: #111315;          /* Fondo principal oscuro */
+            --card-bg: #1c1f22;           /* Fondo de las tarjetas */
+            --input-bg: #151719;          /* Fondo de los inputs */
+            --text-main: #ffffff;         /* Texto principal blanco */
+            --text-muted: #8b929b;        /* Texto secundario gris */
+            --primary-blue: #3b82f6;      /* Azul brillante del botón */
+            --primary-blue-hover: #2563eb;
+            --border-color: #2a2e33;      /* Bordes oscuros */
+            --nav-bg: #111315;            /* Fondo del menú superior */
+            --icon-bg: rgba(59, 130, 246, 0.15); /* Fondo sutil para iconos azules */
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+        }
+
+        /* Contenedor móvil centrado */
+        .app-container {
+            width: 100%;
+            max-width: 450px;
+            background-color: var(--bg-color);
+            min-height: 100vh;
+            position: relative;
+            padding-bottom: 70px;
+            box-shadow: 0 0 30px rgba(0,0,0,0.8);
+        }
+
+        /* --- Header / Top Nav --- */
+        .top-nav {
+            background-color: var(--nav-bg);
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .top-nav .logo img {
+            height: 24px;
+        }
+
+        .top-nav .user-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .notification {
+            position: relative;
+            cursor: pointer;
+            color: var(--text-muted);
+        }
+
+        .notification .badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: var(--primary-blue);
+            color: white;
+            font-size: 10px;
+            font-weight: bold;
+            padding: 2px 5px;
+            border-radius: 50%;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+        }
+
+        .avatar {
+            width: 30px;
+            height: 30px;
+            background-color: var(--primary-blue);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+
+        /* --- Main Content --- */
+        .content {
+            padding: 20px;
+        }
+
+        /* Hero Banner */
+        .hero-banner {
+            background: linear-gradient(135deg, #1c1f22 0%, #2a2e33 100%);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 25px;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+
+        .hero-banner h2 {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            max-width: 80%;
+            color: #ffffff;
+        }
+
+        .hero-banner p {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 15px;
+            max-width: 75%;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-blue);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px; /* Botones más redondeados según el diseño oscuro */
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: background 0.3s;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-blue-hover);
+        }
+
+        /* Section Titles */
+        .section-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #ffffff;
+        }
+
+        /* Vehicle Selection */
+        .vehicles-scroll {
+            display: flex;
+            gap: 15px;
+            overflow-x: auto;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+            scrollbar-width: none;
+        }
+        .vehicles-scroll::-webkit-scrollbar { display: none; }
+
+        .vehicle-card {
+            background-color: var(--card-bg);
+            min-width: 140px;
+            border-radius: 16px;
+            padding: 15px;
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .vehicle-card.active {
+            border-color: var(--primary-blue);
+            background-color: rgba(59, 130, 246, 0.05); /* Ligeramente azulado */
+        }
+
+        .vehicle-card i.main-icon {
+            font-size: 40px;
+            color: var(--text-muted);
+            margin-bottom: 15px;
+            transition: color 0.3s;
+        }
+
+        .vehicle-card.active i.main-icon {
+            color: var(--primary-blue);
+        }
+
+        .vehicle-info {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            width: 100%;
+            text-align: left;
+        }
+
+        .icon-circle {
+            width: 24px;
+            height: 24px;
+            background-color: var(--icon-bg);
+            color: var(--primary-blue);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            flex-shrink: 0;
+        }
+
+        .vehicle-text h4 {
+            font-size: 14px;
+            margin-bottom: 2px;
+            color: var(--text-main);
+        }
+
+        .vehicle-text p {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        /* Forms / Nueva Solicitud */
+        .form-card {
+            background-color: var(--card-bg);
+            border-radius: 20px;
+            padding: 20px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 20px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        /* Estilo de label similar al formulario de registro */
+        .input-group label {
+            position: absolute;
+            top: -8px;
+            left: 15px;
+            background-color: var(--card-bg); /* Oculta la línea del borde detrás */
+            padding: 0 5px;
+            font-size: 10px;
+            font-weight: 600;
+            color: #a0bbf0; /* Azul claro para los labels */
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            z-index: 10;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-wrapper i.form-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        .input-wrapper select,
+        .input-wrapper input {
+            width: 100%;
+            padding: 14px 14px 14px 40px;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            font-size: 14px;
+            background-color: var(--input-bg);
+            outline: none;
+            color: var(--text-main);
+            appearance: none;
+            transition: border-color 0.3s;
+        }
+
+        .input-wrapper select:focus,
+        .input-wrapper input:focus {
+            border-color: var(--primary-blue);
+        }
+
+        /* Ajuste de color para opciones de select en algunos navegadores */
+        .input-wrapper select option {
+            background-color: var(--input-bg);
+            color: var(--text-main);
+        }
+
+        .select-arrow {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            pointer-events: none;
+            font-size: 12px;
+        }
+
+        /* Tarjeta de Tarifa Estimada */
+        .tariff-card {
+            background-color: var(--card-bg);
+            border-radius: 20px;
+            padding: 20px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 25px;
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+        }
+
+        .tariff-icon {
+            width: 40px;
+            height: 40px;
+            background-color: var(--icon-bg);
+            color: var(--primary-blue);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .tariff-details h4 {
+            font-size: 12px;
+            color: var(--text-muted);
+            font-weight: 500;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .tariff-details .price {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 4px;
+            color: var(--text-main);
+            transition: color 0.3s;
+        }
+
+        .price.updating {
+            color: var(--primary-blue);
+        }
+
+        .tariff-details p {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+
+        .tariff-details a {
+            font-size: 12px;
+            color: var(--primary-blue);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        /* Solicitudes Recientes */
+        .recent-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .recent-header a {
+            font-size: 12px;
+            color: var(--primary-blue);
+            text-decoration: none;
+        }
+
+        .recent-list {
+            background-color: var(--card-bg);
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+        }
+
+        .recent-item {
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--border-color);
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .recent-item:hover {
+            background-color: #212529;
+        }
+
+        .recent-item:last-child {
+            border-bottom: none;
+        }
+
+        .recent-item-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .recent-item-info h5 {
+            font-size: 13px;
+            margin-bottom: 2px;
+            color: var(--text-main);
+        }
+
+        .recent-item-info p {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-bottom: 2px;
+        }
+
+        .recent-item-info .date {
+            font-size: 10px;
+            color: #6b7280;
+        }
+
+        .status-badge {
+            font-size: 10px;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-weight: 600;
+        }
+
+        .status-blue {
+            background-color: rgba(59, 130, 246, 0.15);
+            color: var(--primary-blue);
+        }
+
+        .status-green {
+            background-color: rgba(34, 197, 94, 0.15);
+            color: #4ade80; /* Verde adaptado a modo oscuro */
+        }
+
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            max-width: 450px;
+            background-color: var(--nav-bg);
+            display: flex;
+            justify-content: space-around;
+            padding: 12px 10px;
+            border-top: 1px solid var(--border-color);
+            z-index: 100;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 10px;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .nav-item i {
+            font-size: 18px;
+        }
+
+        .nav-item.active {
+            color: var(--primary-blue);
+        }
+        .nav-item:hover {
+            color: #cfd4d9;
+        }
+
+        /* Para el calendario del input datetime-local en modo oscuro */
+        ::-webkit-calendar-picker-indicator {
+            filter: invert(1);
+            opacity: 0.5;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        
+        <nav class="top-nav">
+            <div class="logo">
+                <span style="font-weight: 700; font-size:18px; color:#3b82f6;">X<span style="color:white;">INCOEX</span></span>
+            </div>
+            <div class="user-actions">
+                <div class="notification" onclick="alert('No tienes notificaciones nuevas')">
+                    <i class="fa-regular fa-bell"></i>
+                    <span class="badge">2</span>
+                </div>
+                <div class="user-profile">
+                    <div class="avatar"><i class="fa-regular fa-user"></i></div>
+                    <i class="fa-solid fa-chevron-down" style="font-size: 10px; color:var(--text-muted);"></i>
+                </div>
+            </div>
+        </nav>
+
+        <main class="content">
+            
+            <section class="hero-banner">
+                <h2>Movemos tu carga, confiablemente.</h2>
+                <p>Solicita transporte de forma rápida, segura y al mejor precio.</p>
+                <button class="btn-primary" id="btnSolicitarBanner">
+                    Solicitar transporte <i class="fa-solid fa-arrow-right" style="font-size: 12px;"></i>
+                </button>
+            </section>
+
+            <h3 class="section-title">¿Qué vehículo necesitas?</h3>
+            <div class="vehicles-scroll">
+                <div class="vehicle-card active" onclick="selectVehicle(this, 'Moto')">
+                    <i class="fa-solid fa-motorcycle main-icon"></i>
+                    <div class="vehicle-info">
+                        <div class="icon-circle"><i class="fa-solid fa-motorcycle"></i></div>
+                        <div class="vehicle-text">
+                            <h4>Moto</h4>
+                            <p>Envíos pequeños</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="vehicle-card" onclick="selectVehicle(this, 'Vehículo')">
+                    <i class="fa-solid fa-truck-pickup main-icon"></i>
+                    <div class="vehicle-info">
+                        <div class="icon-circle"><i class="fa-solid fa-car"></i></div>
+                        <div class="vehicle-text">
+                            <h4>Vehículo</h4>
+                            <p>Paquetería mediana</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-card">
+                <h3 class="section-title">Nueva solicitud</h3>
+                
+                <div class="input-group">
+                    <label>ORIGEN</label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-location-dot form-icon"></i>
+                        <select id="origen" onchange="calculateTariff()">
+                            <option value="">Seleccione Origen</option>
+                            <option value="Managua" selected>Managua, Managua</option>
+                            <option value="Leon">León, León</option>
+                            <option value="Granada">Granada, Granada</option>
+                        </select>
+                        <i class="fa-solid fa-chevron-down select-arrow"></i>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label>DESTINO</label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-crosshairs form-icon"></i>
+                        <select id="destino" onchange="calculateTariff()">
+                            <option value="">Seleccione Destino</option>
+                            <option value="Managua">Managua, Managua</option>
+                            <option value="Leon" selected>León, León</option>
+                            <option value="Chinandega">Chinandega, Chinandega</option>
+                        </select>
+                        <i class="fa-solid fa-chevron-down select-arrow"></i>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label>FECHA Y HORA</label>
+                    <div class="input-wrapper">
+                        <i class="fa-regular fa-calendar form-icon"></i>
+                        <input type="datetime-local" id="fecha" value="2025-05-24T09:00">
+                    </div>
+                </div>
+
+                <div class="input-group" style="margin-bottom: 0;">
+                    <label>TIPO DE CARGA</label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-box form-icon"></i>
+                        <select id="tipo_carga" onchange="calculateTariff()">
+                            <option value="general">Mercancía general</option>
+                            <option value="fragil">Frágil</option>
+                            <option value="peligrosa">Peligrosa</option>
+                        </select>
+                        <i class="fa-solid fa-chevron-down select-arrow"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tariff-card">
+                <div class="tariff-icon">$</div>
+                <div class="tariff-details">
+                    <h4>Tarifa estimada <i class="fa-solid fa-circle-info" style="color:var(--text-muted); cursor:pointer;" onclick="alert('Cálculo basado en distancia.')"></i></h4>
+                    <div class="price" id="precioMonto">C$ 4,850 – C$ 5,600</div>
+                    <p>El precio final puede variar según carga y ruta.</p>
+                    <a href="#" onclick="event.preventDefault(); alert('Mostrando detalles...');">Ver detalles <i class="fa-solid fa-arrow-right" style="font-size:10px;"></i></a>
+                </div>
+            </div>
+
+            <div class="recent-header">
+                <h3 class="section-title" style="margin-bottom:0;">Solicitudes recientes</h3>
+                <a href="#">Ver todas</a>
+            </div>
+
+            <div class="recent-list">
+                <div class="recent-item" onclick="alert('Abriendo #SL-2025-0458')">
+                    <div class="recent-item-left">
+                        <div class="icon-circle"><i class="fa-solid fa-truck-fast"></i></div>
+                        <div class="recent-item-info">
+                            <h5>#SL-2025-0458</h5>
+                            <p>Managua <i class="fa-solid fa-arrow-right" style="font-size:8px;"></i> León</p>
+                            <span class="date">22 may 2025, 14:30</span>
+                        </div>
+                    </div>
+                    <div style="display:flex; align-items:center; gap:10px;">
+                        <span class="status-badge status-blue">En camino</span>
+                        <i class="fa-solid fa-chevron-right" style="color:var(--text-muted); font-size:12px;"></i>
+                    </div>
+                </div>
+
+                <div class="recent-item" onclick="alert('Abriendo #SL-2025-0451')">
+                    <div class="recent-item-left">
+                        <div class="icon-circle"><i class="fa-solid fa-box-open"></i></div>
+                        <div class="recent-item-info">
+                            <h5>#SL-2025-0451</h5>
+                            <p>Chinandega <i class="fa-solid fa-arrow-right" style="font-size:8px;"></i> Managua</p>
+                            <span class="date">21 may 2025, 10:15</span>
+                        </div>
+                    </div>
+                    <div style="display:flex; align-items:center; gap:10px;">
+                        <span class="status-badge status-green">Cotización</span>
+                        <i class="fa-solid fa-chevron-right" style="color:var(--text-muted); font-size:12px;"></i>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+
+        <nav class="bottom-nav">
+            <div class="nav-item active" onclick="activateNav(this)">
+                <i class="fa-solid fa-house"></i>
+                <span>Inicio</span>
+            </div>
+            <div class="nav-item" onclick="activateNav(this)">
+                <i class="fa-regular fa-file-lines"></i>
+                <span>Solicitudes</span>
+            </div>
+            <div class="nav-item" onclick="activateNav(this)">
+                <i class="fa-solid fa-location-dot"></i>
+                <span>Tracking</span>
+            </div>
+            <div class="nav-item" onclick="activateNav(this)">
+                <i class="fa-solid fa-clock-rotate-left"></i>
+                <span>Historial</span>
+            </div>
+            <div class="nav-item" onclick="activateNav(this)">
+                <i class="fa-regular fa-user"></i>
+                <span>Perfil</span>
+            </div>
+        </nav>
+
+    </div>
+
+    <script>
+        let selectedVehicleType = 'Moto';
+        function selectVehicle(element, type) {
+            document.querySelectorAll('.vehicle-card').forEach(card => card.classList.remove('active'));
+            element.classList.add('active');
+            selectedVehicleType = type;
+            calculateTariff();
+        }
+
+        function calculateTariff() {
+            const origen = document.getElementById('origen').value;
+            const destino = document.getElementById('destino').value;
+            const precioElement = document.getElementById('precioMonto');
+
+            if (!origen || !destino) {
+                precioElement.innerText = "Seleccione ruta";
+                return;
+            }
+
+            precioElement.classList.add('updating');
+            precioElement.innerText = "Calculando...";
+
+            setTimeout(() => {
+                let basePrice = 2000;
+                if(selectedVehicleType !== 'Moto') basePrice += 1500;
+                if(origen !== destino) basePrice += 1200;
+                
+                let min = basePrice + Math.floor(Math.random() * 500);
+                let max = min + 800;
+
+                let strMin = min.toLocaleString('en-US');
+                let strMax = max.toLocaleString('en-US');
+
+                precioElement.innerText = `C$ ${strMin} – C$ ${strMax}`;
+                precioElement.classList.remove('updating');
+            }, 600);
+        }
+
+        document.getElementById('btnSolicitarBanner').addEventListener('click', () => {
+            const origen = document.getElementById('origen').value;
+            const destino = document.getElementById('destino').value;
+            
+            if(!origen || !destino) {
+                alert("Por favor, selecciona un origen y un destino primero.");
+                document.querySelector('.form-card').scrollIntoView({ behavior: 'smooth' });
+            } else {
+                alert(`¡Solicitud iniciada!\nVehículo: ${selectedVehicleType}\nRuta: ${origen} a ${destino}`);
+            }
+        });
+
+        function activateNav(element) {
+            document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+            element.classList.add('active');
+        }
+    </script>
+</body>
+</html>

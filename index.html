@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title></title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <style>
+
+        *{
+            font-family: Inter, sans-serif;
+        }
+
+        body{
+
+            margin:0;
+            background:#060B14;
+
+            display:flex;
+            justify-content:center;
+            align-items:center;
+
+            height:100vh;
+
+            overflow:hidden;
+
+        }
+
+        /* Pantalla fija */
+
+        .phone{
+
+            width:390px;
+            height:844px;
+
+            background:#0B0F17;
+
+            position:relative;
+
+            overflow:hidden;
+
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            flex-direction:column;
+
+            border-radius:30px;
+
+            box-shadow:
+            0 0 60px rgba(0,0,0,.55);
+
+        }
+
+        /* Fondo */
+
+        .glow{
+
+            position:absolute;
+
+            width:320px;
+            height:320px;
+
+            background:#1E88FF;
+
+            border-radius:50%;
+
+            filter:blur(140px);
+
+            opacity:.22;
+
+        }
+
+        .logo{
+
+            width:170px;
+
+            animation:logo 1.2s ease forwards;
+
+            z-index:2;
+
+            filter:drop-shadow(0 0 25px rgba(30,136,255,.35));
+
+        }
+
+        @keyframes logo{
+
+            from{
+
+                opacity:0;
+                transform:translateY(25px) scale(.90);
+
+            }
+
+            to{
+
+                opacity:1;
+                transform:translateY(0) scale(1);
+
+            }
+
+        }
+
+        h1{
+
+            color:white;
+
+            font-size:34px;
+
+            font-weight:700;
+
+            margin-top:28px;
+
+            letter-spacing:2px;
+
+            z-index:2;
+
+        }
+
+        h2{
+
+            color:#79B5FF;
+
+            font-size:15px;
+
+            font-weight:400;
+
+            margin-top:10px;
+
+            z-index:2;
+
+            letter-spacing:.5px;
+
+        }
+
+        /* Barra */
+
+        .loading{
+
+            width:210px;
+
+            height:5px;
+
+            background:#202734;
+
+            border-radius:30px;
+
+            margin-top:70px;
+
+            overflow:hidden;
+
+            z-index:2;
+
+        }
+
+        .bar{
+
+            width:0%;
+
+            height:100%;
+
+            background:linear-gradient(90deg,#1E88FF,#53B3FF);
+
+            border-radius:30px;
+
+            animation:loading 2.8s linear forwards;
+
+        }
+
+        @keyframes loading{
+
+            from{
+
+                width:0%;
+
+            }
+
+            to{
+
+                width:100%;
+
+            }
+
+        }
+
+        .text{
+
+            margin-top:18px;
+
+            color:#C6D3E4;
+
+            font-size:14px;
+
+            letter-spacing:.8px;
+
+            animation:pulse 2s infinite;
+
+            z-index:2;
+
+        }
+
+        @keyframes pulse{
+
+            0%{
+
+                opacity:.4;
+
+            }
+
+            50%{
+
+                opacity:1;
+
+            }
+
+            100%{
+
+                opacity:.4;
+
+            }
+
+        }
+
+        .version{
+
+            position:absolute;
+
+            bottom:35px;
+
+            color:#60718A;
+
+            font-size:12px;
+
+            letter-spacing:1px;
+
+            z-index:2;
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <div class="phone">
+
+        <div class="glow"></div>
+
+        <!-- CAMBIA ESTA IMAGEN -->
+
+        <img src="img/logo.png" class="logo">
+
+        <h1>INCODEX</h1>
+
+        <h2>Tecnología para mover tu carga</h2>
+
+        <div class="loading">
+
+            <div class="bar"></div>
+
+        </div>
+
+        <div class="text">
+
+            Preparando la aplicación...
+
+        </div>
+
+        <div class="version">
+
+            Versión 1.0
+
+        </div>
+
+    </div>
+
+    <script>
+
+        setTimeout(function(){
+
+            window.location.href="login.html";
+
+        },3000);
+
+    </script>
+
+</body>
+
+</html>

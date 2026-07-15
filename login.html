@@ -26,7 +26,6 @@
             padding: 20px;
         }
 
-        /* Contenedor del Logo (Simulado para que puedas reemplazar la imagen) */
         .logo-container {
             margin-bottom: 25px;
             display: flex;
@@ -35,11 +34,10 @@
         }
 
         .logo-container img {
-            height: 40px; /* Ajusta según tu logo real */
+            height: 40px;
             object-fit: contain;
         }
 
-        /* Tarjeta de Login */
         .login-card {
             background-color: #1c1f22;
             width: 100%;
@@ -58,7 +56,7 @@
         .header h1 {
             font-size: 24px;
             font-weight: 600;
-            color: #a0bbf0; /* Color azul claro del título */
+            color: #a0bbf0;
             margin-bottom: 8px;
         }
 
@@ -67,7 +65,6 @@
             color: #8b929b;
         }
 
-        /* Grupos de formulario */
         .form-group {
             margin-bottom: 20px;
         }
@@ -97,7 +94,6 @@
             text-decoration: underline;
         }
 
-        /* Contenedor de inputs con iconos */
         .input-wrapper {
             position: relative;
             display: flex;
@@ -139,7 +135,6 @@
             color: #4a5056;
         }
 
-        /* Opciones de Recordarme */
         .remember-options {
             display: flex;
             align-items: center;
@@ -169,7 +164,6 @@
             cursor: pointer;
         }
 
-        /* Botón Principal */
         .btn-primary {
             width: 100%;
             background: linear-gradient(135deg, #273b53 0%, #1e2e42 100%);
@@ -187,7 +181,6 @@
             opacity: 0.9;
         }
 
-        /* Divisor */
         .divider {
             display: flex;
             align-items: center;
@@ -210,7 +203,6 @@
             letter-spacing: 1px;
         }
 
-        /* Botones Sociales */
         .social-buttons {
             display: flex;
             gap: 15px;
@@ -238,7 +230,6 @@
             background-color: #2a2e33;
         }
 
-        /* Registro Link */
         .register-link {
             text-align: center;
             font-size: 14px;
@@ -255,7 +246,6 @@
             text-decoration: underline;
         }
 
-        /* Footer Copyright */
         .footer-copy {
             text-align: center;
             margin-top: 30px;
@@ -278,7 +268,8 @@
             <p>Accede a tu panel de control</p>
         </div>
 
-        <form action="#" method="POST">
+        <!-- CAMBIO 1: action apunta directamente a dashboard.html -->
+        <form action="dashboard.html" method="GET">
             <div class="form-group">
                 <label for="email">Correo electrónico</label>
                 <div class="input-wrapper">
@@ -289,8 +280,8 @@
 
             <div class="form-group">
                 <div class="label-row">
-                    <label for="password">Contraseña</label>
-                    <a href="#">¿Olvidó su contraseña?</a>
+                    <label for="password">Contrasena</label>
+                    <a href="#">Olvido su contrasena?</a>
                 </div>
                 <div class="input-wrapper">
                     <i class="fa-solid fa-lock icon-left"></i>
@@ -304,7 +295,8 @@
                 <label for="remember">Recordarme</label>
             </div>
 
-           <button class="btn-primary" onclick="window.location.href='dashboard.html'">Iniciar Sesión</button>
+            <!-- CAMBIO 2: type="submit" para que el form procese el action correctamente -->
+            <button type="submit" class="btn-primary">Iniciar Sesión</button>
         </form>
 
         <div class="divider">
@@ -320,8 +312,9 @@
             </button>
         </div>
 
+        <!-- CAMBIO 3: href apunta a registro.html -->
         <div class="register-link">
-            ¿No tienes una cuenta? <a href="registro.html">Crear Cuenta</a>
+            No tienes una cuenta? <a href="registro.html">Crear Cuenta</a>
         </div>
     </div>
 

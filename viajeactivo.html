@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>INCOEX - Servicio Activo</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #091421;
+            color: #d8e3f6;
+            -webkit-font-smoothing: antialiased;
+        }
+        .glass-card {
+            background: rgba(26, 34, 51, 0.6);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .map-gradient-overlay {
+            background: linear-gradient(to bottom, rgba(9, 20, 33, 0.4) 0%, rgba(9, 20, 33, 0) 20%, rgba(9, 20, 33, 0) 80%, rgba(9, 20, 33, 1) 100%);
+        }
+        .shimmer {
+            background: linear-gradient(90deg, rgba(59, 144, 255, 0) 0%, rgba(59, 144, 255, 0.2) 50%, rgba(59, 144, 255, 0) 100%);
+            background-size: 200% 100%;
+            animation: shimmer 3s infinite linear;
+        }
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+        .pulse-glow {
+            animation: pulse-glow 2s infinite ease-in-out;
+        }
+        @keyframes pulse-glow {
+            0%, 100% { transform: scale(1); opacity: 0.8; box-shadow: 0 0 0 0 rgba(59, 144, 255, 0.7); }
+            50% { transform: scale(1.1); opacity: 1; box-shadow: 0 0 20px 10px rgba(59, 144, 255, 0); }
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "secondary": "#a2c9ff",
+                      "on-secondary-fixed-variant": "#004881",
+                      "on-primary-container": "#002957",
+                      "secondary-container": "#3994ef",
+                      "on-primary": "#003063",
+                      "on-error-container": "#ffdad6",
+                      "tertiary-fixed-dim": "#4ae183",
+                      "on-tertiary-fixed": "#00210c",
+                      "background": "#091421",
+                      "surface-variant": "#2b3544",
+                      "primary-container": "#3b90ff",
+                      "surface-container-high": "#202b39",
+                      "surface-container-low": "#111c2a",
+                      "on-primary-fixed-variant": "#00468c",
+                      "on-secondary-container": "#002b50",
+                      "surface-dim": "#091421",
+                      "surface-container": "#15202e",
+                      "error-container": "#93000a",
+                      "secondary-fixed": "#d3e4ff",
+                      "on-surface-variant": "#c1c6d6",
+                      "tertiary-fixed": "#6bfe9c",
+                      "inverse-surface": "#d8e3f6",
+                      "surface-tint": "#a9c7ff",
+                      "outline": "#8b919f",
+                      "surface-container-lowest": "#040f1c",
+                      "tertiary-container": "#00a657",
+                      "on-tertiary-fixed-variant": "#005228",
+                      "surface": "#091421",
+                      "primary-fixed": "#d6e3ff",
+                      "tertiary": "#4ae183",
+                      "secondary-fixed-dim": "#a2c9ff",
+                      "on-tertiary": "#003919",
+                      "primary": "#a9c7ff",
+                      "surface-bright": "#2f3a49",
+                      "on-background": "#d8e3f6",
+                      "surface-container-highest": "#2b3544",
+                      "on-secondary": "#00315b",
+                      "outline-variant": "#414754",
+                      "on-primary-fixed": "#001b3d",
+                      "primary-fixed-dim": "#a9c7ff",
+                      "on-surface": "#d8e3f6",
+                      "on-error": "#690005",
+                      "error": "#ffb4ab",
+                      "on-secondary-fixed": "#001c38",
+                      "on-tertiary-container": "#003115",
+                      "inverse-primary": "#005db7",
+                      "inverse-on-surface": "#26313f"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "xs": "4px",
+                      "container-margin": "24px",
+                      "lg": "24px",
+                      "xl": "32px",
+                      "unit": "8px",
+                      "md": "16px",
+                      "sm": "8px",
+                      "gutter": "16px"
+              },
+              "fontFamily": {
+                      "label-md": ["Inter"],
+                      "headline-md": ["Inter"],
+                      "headline-lg-mobile": ["Inter"],
+                      "headline-lg": ["Inter"],
+                      "body-lg": ["Inter"],
+                      "body-md": ["Inter"],
+                      "label-sm": ["Inter"],
+                      "headline-xl": ["Inter"]
+              },
+              "fontSize": {
+                      "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "500"}],
+                      "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                      "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                      "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                      "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                      "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                      "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                      "headline-xl": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+              }
+            },
+          },
+        }
+    </script>
+</head>
+<body class="overflow-x-hidden pb-24">
+<!-- Top App Bar -->
+<header class="fixed top-0 w-full z-50 bg-surface/60 dark:bg-surface/60 backdrop-blur-xl border-b border-white/10 shadow-md flex justify-between items-center px-container-margin h-16">
+<div class="flex items-center gap-4">
+<button class="active:scale-95 transition-transform hover:opacity-80">
+<span class="material-symbols-outlined text-primary">arrow_back</span>
+</button>
+<h1 class="font-headline-md text-headline-md font-bold tracking-tight text-primary">Detalle de Viaje</h1>
+</div>
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary cursor-pointer hover:opacity-80">notifications</span>
+<div class="w-8 h-8 rounded-full bg-primary-container flex items-center justify-center text-on-primary-container overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A professional close-up portrait of a logistics manager with a confident expression, wearing a dark blue uniform in a high-tech control center environment. The lighting is dramatic with blue and teal accents, following the premium dark-mode aesthetic of the INCOEX brand." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD0x_s1tiC_tYbUkLfXVREH0vtLcInI2kMGVRDbeBvyNdTAom4Xg2PHJeyxh7xCr2V2aDdHdJt7SrxnknghwFZwIIXsnyVZAUzyTKTWqi6Slm-24ViQ4ncAo4Q5oIUFXyuSDvg2IKFYKB5-C3yTJVolWjsrcbGLuPZZLEHe-UX09bI35FvmWH9WhbhZYcP7SbHRCFOHKfoWtl4kLvggdWfodHLTux9uQYgX5BaJlICoDy5_GGXlOcGS"/>
+</div>
+</div>
+</header>
+<main class="pt-16 px-4 md:px-container-margin max-w-7xl mx-auto">
+<!-- Status & Map Preview Section -->
+<section class="mt-6 relative rounded-2xl overflow-hidden h-[40vh] md:h-[50vh] border border-white/10 shadow-2xl">
+<!-- Mock Map Background -->
+<div class="absolute inset-0 z-0 bg-[#0B0F17]" data-location="Bogota, Colombia" style="">
+<div class="absolute inset-0 opacity-40 mix-blend-overlay" data-alt="A detailed topographic map representation of a major metropolitan area at night, showing glowing blue grid lines, arterial highways in electric cyan, and pulsating navigation markers. The style is futuristic and minimalist, utilizing deep navy and black tones to maintain high contrast with the luminous logistics routes." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDLkKspTwhYPgr6_atTZmcKYMSyzGNG5jvAzMXr6BQyevgwd3TqoE3Jk665V2bX-uOtP08e_1b7EE40JWIXWSUNyStXC2EGXAOqtNlRm84S9Qd9OtBULWFHRTFk_cZsmmzcIvSZMnX3cv-0ThlSk-M2ybiALg3-Gdh1zMm7TVtjGAyEFL6BAY7Kqt-V88QcvTXQpx9bnGf-pjBAq4IZO4oIJTYt2NiCrQKrg085ZTa-0wDpe5WLOQJR')"></div>
+<div class="map-gradient-overlay absolute inset-0"></div>
+<!-- Animated Route Line (CSS simulation) -->
+<svg class="absolute inset-0 w-full h-full pointer-events-none" preserveaspectratio="none">
+<path class="shimmer" d="M 50 400 Q 200 300 400 350 T 700 200" fill="none" stroke="url(#route-gradient)" stroke-dasharray="10 5" stroke-width="4"></path>
+<defs>
+<lineargradient id="route-gradient" x1="0%" x2="100%" y1="0%" y2="0%">
+<stop offset="0%" stop-color="#3b90ff"></stop>
+<stop offset="100%" stop-color="#4ae183"></stop>
+</lineargradient>
+</defs>
+</svg>
+<!-- Vehicle Marker -->
+<div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
+<div class="pulse-glow w-6 h-6 bg-primary rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined text-on-primary text-sm" style="font-variation-settings: 'FILL' 1;">local_shipping</span>
+</div>
+</div>
+</div>
+<!-- Floating Status Badge -->
+<div class="absolute top-4 left-4 z-20 flex items-center gap-2 bg-tertiary/10 backdrop-blur-md border border-tertiary/20 px-4 py-2 rounded-full">
+<span class="w-2 h-2 rounded-full bg-tertiary animate-pulse"></span>
+<span class="font-label-md text-tertiary uppercase tracking-wider">En ruta</span>
+</div>
+<!-- Origin/Destination Info Overlay -->
+<div class="absolute bottom-4 left-4 right-4 z-20 glass-card p-4 rounded-xl flex justify-between items-center">
+<div class="flex-1">
+<p class="font-label-sm text-on-surface-variant uppercase text-[10px]">Origen</p>
+<p class="font-label-md text-on-surface font-bold">Terminal Carga, Bogotá</p>
+</div>
+<div class="px-4 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">trending_flat</span>
+</div>
+<div class="flex-1 text-right">
+<p class="font-label-sm text-on-surface-variant uppercase text-[10px]">Destino</p>
+<p class="font-label-md text-on-surface font-bold">Bodega Central, Medellín</p>
+</div>
+</div>
+</section>
+<!-- Progress Stepper -->
+<section class="mt-8 px-2">
+<div class="relative flex justify-between items-start">
+<!-- Line -->
+<div class="absolute top-4 left-0 w-full h-[2px] bg-surface-variant z-0">
+<div class="h-full bg-primary w-[75%] transition-all duration-1000"></div>
+</div>
+<!-- Steps -->
+<div class="relative z-10 flex flex-col items-center gap-2 w-1/4">
+<div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center shadow-lg shadow-primary/20">
+<span class="material-symbols-outlined text-on-primary text-[16px]" style="font-variation-settings: 'FILL' 1;">check</span>
+</div>
+<span class="font-label-sm text-on-surface text-center">Origen</span>
+</div>
+<div class="relative z-10 flex flex-col items-center gap-2 w-1/4">
+<div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center shadow-lg shadow-primary/20">
+<span class="material-symbols-outlined text-on-primary text-[16px]" style="font-variation-settings: 'FILL' 1;">inventory_2</span>
+</div>
+<span class="font-label-sm text-on-surface text-center">Carga</span>
+</div>
+<div class="relative z-10 flex flex-col items-center gap-2 w-1/4">
+<div class="w-8 h-8 rounded-full bg-primary-container border-4 border-background flex items-center justify-center shadow-lg shadow-primary/20 scale-110">
+<span class="material-symbols-outlined text-on-primary-container text-[16px]" style="font-variation-settings: 'FILL' 1;">local_shipping</span>
+</div>
+<span class="font-label-sm text-primary font-bold text-center">En ruta</span>
+</div>
+<div class="relative z-10 flex flex-col items-center gap-2 w-1/4">
+<div class="w-8 h-8 rounded-full bg-surface-container border-4 border-background flex items-center justify-center">
+<span class="material-symbols-outlined text-outline text-[16px]">location_on</span>
+</div>
+<span class="font-label-sm text-on-surface-variant text-center">Destino</span>
+</div>
+</div>
+</section>
+<!-- Service Details (Bento Grid) -->
+<section class="mt-10 grid grid-cols-2 md:grid-cols-4 gap-4">
+<!-- Client Info -->
+<div class="col-span-2 glass-card p-6 rounded-2xl flex items-center gap-4">
+<div class="w-12 h-12 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">business</span>
+</div>
+<div>
+<p class="font-label-sm text-on-surface-variant uppercase text-[10px]">Cliente Principal</p>
+<p class="font-body-lg text-on-surface font-bold">TechLogistics S.A.</p>
+<p class="text-[12px] text-tertiary">ID Contrato: #INC-2024-882</p>
+</div>
+</div>
+<!-- Metrics -->
+<div class="glass-card p-4 rounded-2xl flex flex-col justify-between">
+<p class="font-label-sm text-on-surface-variant uppercase text-[10px]">Carga Total</p>
+<div class="flex items-baseline gap-1 mt-2">
+<span class="font-headline-md text-on-surface">12.5</span>
+<span class="font-label-md text-on-surface-variant">TON</span>
+</div>
+<div class="mt-2 h-1 bg-surface-variant rounded-full overflow-hidden">
+<div class="h-full bg-secondary w-3/4"></div>
+</div>
+</div>
+<div class="glass-card p-4 rounded-2xl flex flex-col justify-between">
+<p class="font-label-sm text-on-surface-variant uppercase text-[10px]">Distancia Total</p>
+<div class="flex items-baseline gap-1 mt-2">
+<span class="font-headline-md text-on-surface">420</span>
+<span class="font-label-md text-on-surface-variant">KM</span>
+</div>
+<p class="text-[10px] text-tertiary mt-2">128 KM restantes</p>
+</div>
+<!-- Payment -->
+<div class="col-span-2 md:col-span-4 glass-card p-6 rounded-2xl flex justify-between items-center border-l-4 border-l-tertiary">
+<div>
+<p class="font-label-sm text-on-surface-variant uppercase text-[10px]">Liquidación de Pago</p>
+<p class="font-headline-md text-on-surface">$1,450,000 <span class="text-label-md font-normal text-on-surface-variant">COP</span></p>
+</div>
+<div class="flex gap-2">
+<span class="bg-tertiary/10 text-tertiary font-label-sm px-3 py-1 rounded-full border border-tertiary/20">Pago Parcial</span>
+<span class="bg-primary/10 text-primary font-label-sm px-3 py-1 rounded-full border border-primary/20">Aprobado</span>
+</div>
+</div>
+</section>
+<!-- Quick Actions -->
+<section class="mt-8 flex flex-col gap-4">
+<div class="grid grid-cols-2 gap-4">
+<button class="flex items-center justify-center gap-2 bg-surface-container border border-white/10 hover:bg-surface-bright transition-colors rounded-xl py-4 active:scale-95 duration-200">
+<span class="material-symbols-outlined text-primary">photo_camera</span>
+<span class="font-label-md text-on-surface">Tomar foto</span>
+</button>
+<button class="flex items-center justify-center gap-2 bg-surface-container border border-white/10 hover:bg-surface-bright transition-colors rounded-xl py-4 active:scale-95 duration-200">
+<span class="material-symbols-outlined text-primary">forum</span>
+<span class="font-label-md text-on-surface">Chat soporte</span>
+</button>
+</div>
+<button class="w-full bg-primary hover:bg-primary/90 text-on-primary font-bold py-5 rounded-xl flex items-center justify-center gap-3 shadow-lg shadow-primary/30 transition-all active:scale-95">
+<span class="material-symbols-outlined">verified</span>
+<span class="font-headline-md text-[18px]">Confirmar Entrega</span>
+</button>
+</section>
+<!-- Driver / Route Visual Asset -->
+<section class="mt-10 mb-10">
+<div class="relative w-full aspect-[21/9] rounded-2xl overflow-hidden border border-white/10">
+<img class="w-full h-full object-cover grayscale opacity-60 hover:grayscale-0 hover:opacity-100 transition-all duration-700 cursor-pointer" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCtubOz_CXigZ7TQ58o3NwHIR8iNiNnDA-dTsmKTFuSG1sm0VHcK7C6mh50kwGlpjDWM9jO5cL02WcrqGgP_3weZNrKkYxqD03RwSz8C1w3GBk34HJcbEgQ8HgmV-s0SfzxOEPiwtlufvV_6b_heNRkEpki6h9DYXLEC8Df-vyiR92i27r1AtuYY_04wCldmV3oHmffSKU5Btq1ylPbaIg5HmH12Jd2zVnp40ksiMocx351sHDzQouZCeASxCFdEZZ0JQ"/>
+<div class="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent"></div>
+<div class="absolute bottom-6 left-6">
+<h3 class="font-headline-md text-white">Ruta Optimizada IA</h3>
+<p class="font-body-md text-on-surface-variant">Actualización cada 30 segundos vía Satélite</p>
+</div>
+</div>
+</section>
+</main>
+<!-- Bottom Navigation Bar -->
+<nav class="fixed bottom-0 w-full z-50 bg-surface-container/60 dark:bg-surface-container/60 backdrop-blur-xl border-t border-white/10 rounded-t-xl shadow-lg flex justify-around items-center h-20 px-4 pb-2">
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-white/5 active:scale-90 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label-sm text-label-sm">Inicio</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-xl px-4 py-1 active:scale-90 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">local_shipping</span>
+<span class="font-label-sm text-label-sm">Viajes</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-white/5 active:scale-90 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined">distance</span>
+<span class="font-label-sm text-label-sm">Tracking</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-white/5 active:scale-90 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-sm text-label-sm">Perfil</span>
+</a>
+</nav>
+<!-- Floating Map Detail FAB (Only relevant for tracking context) -->
+<button class="fixed bottom-24 right-6 w-14 h-14 bg-primary text-on-primary rounded-full shadow-2xl flex items-center justify-center active:scale-90 transition-transform z-40">
+<span class="material-symbols-outlined">my_location</span>
+</button>
+<script>
+        // Simple interactive feedback for confirmation button
+        const confirmBtn = document.querySelector('button.bg-primary');
+        if (confirmBtn) {
+            confirmBtn.addEventListener('click', () => {
+                const text = confirmBtn.querySelector('span:last-child');
+                const originalText = text.innerText;
+                text.innerText = 'Procesando...';
+                confirmBtn.classList.add('opacity-80', 'pointer-events-none');
+                
+                setTimeout(() => {
+                    text.innerText = '¡Entrega Exitosa!';
+                    confirmBtn.classList.replace('bg-primary', 'bg-tertiary');
+                    confirmBtn.classList.replace('text-on-primary', 'text-on-tertiary');
+                    const icon = confirmBtn.querySelector('.material-symbols-outlined');
+                    icon.innerText = 'task_alt';
+                }, 1500);
+            });
+        }
+
+        // Parallax effect on map
+        window.addEventListener('scroll', () => {
+            const map = document.querySelector('[data-location]');
+            const scrolled = window.pageYOffset;
+            if (map) {
+                map.style.transform = `translateY(${scrolled * 0.1}px)`;
+            }
+        });
+    </script>
+</body></html>

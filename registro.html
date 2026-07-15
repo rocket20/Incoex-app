@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>INCOEX - Registro y Verificación</title>
+    <title>INCOEX - Flujo de Registro</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -20,6 +20,7 @@
             --primary-blue: #3b82f6;
             --primary-blue-hover: #2563eb;
             --label-color: #a5b4fc;
+            --success-color: #10b981;
         }
 
         * {
@@ -37,25 +38,28 @@
             align-items: center;
             min-height: 100vh;
             padding: 2rem 1rem;
+            overflow-x: hidden;
         }
 
-        /* Vistas para la transición */
-        #register-view {
+        /* --- CONTENEDORES DE VISTAS --- */
+        .view-container {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            animation: fadeIn 0.4s ease-out forwards;
+        }
+
+        .view-container.active {
             display: flex;
-            flex-direction: column;
-            align-items: center;
-            width: 100%;
         }
 
-        #verification-view {
-            display: none; /* Oculto por defecto */
-            flex-direction: column;
-            align-items: center;
-            width: 100%;
-            margin-top: 2rem;
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        /* --- ESTILOS DE LA PANTALLA DE REGISTRO --- */
+        /* --- ESTILOS COMPARTIDOS --- */
         .logo-container {
             margin-bottom: 2rem;
             display: flex;
@@ -90,113 +94,11 @@
         .card {
             background-color: var(--bg-card);
             border: 1px solid var(--border-color);
-            border-radius: 20px;
+            border-radius: 24px;
             padding: 2.5rem 2rem;
             width: 100%;
             max-width: 420px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        }
-
-        .card-header {
-            margin-bottom: 2rem;
-        }
-
-        .card-header h1 {
-            font-size: 1.5rem;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-        }
-
-        .card-header p {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            line-height: 1.5;
-        }
-
-        .input-group {
-            position: relative;
-            margin-bottom: 1.25rem;
-        }
-
-        .input-group label {
-            position: absolute;
-            top: -7px;
-            left: 15px;
-            background-color: var(--bg-card);
-            padding: 0 5px;
-            font-size: 0.65rem;
-            font-weight: 700;
-            color: var(--label-color);
-            letter-spacing: 0.05em;
-            z-index: 1;
-        }
-
-        .input-wrapper {
-            display: flex;
-            align-items: center;
-            background-color: var(--bg-input);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 0.8rem 1rem;
-            transition: border-color 0.3s;
-        }
-
-        .input-wrapper:focus-within {
-            border-color: var(--primary-blue);
-        }
-
-        .input-wrapper i {
-            color: var(--text-secondary);
-            margin-right: 10px;
-            font-size: 1.1rem;
-        }
-
-        .input-wrapper input {
-            background: transparent;
-            border: none;
-            color: var(--text-primary);
-            width: 100%;
-            outline: none;
-            font-size: 0.9rem;
-        }
-
-        .checkbox-group {
-            display: flex;
-            align-items: flex-start;
-            gap: 10px;
-            margin-top: 1.5rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .checkbox-group input[type="checkbox"] {
-            appearance: none;
-            background-color: transparent;
-            border: 2px solid var(--border-color);
-            border-radius: 50%;
-            width: 20px;
-            height: 20px;
-            cursor: pointer;
-            margin-top: 2px;
-            position: relative;
-            flex-shrink: 0;
-        }
-
-        .checkbox-group input[type="checkbox"]:checked {
-            background-color: var(--primary-blue);
-            border-color: var(--primary-blue);
-        }
-
-        .checkbox-group label {
-            font-size: 0.8rem;
-            color: var(--text-secondary);
-            line-height: 1.4;
-            cursor: pointer;
-        }
-
-        .checkbox-group label a {
-            color: var(--label-color);
-            text-decoration: none;
-            font-weight: 500;
         }
 
         .submit-btn {
@@ -221,179 +123,105 @@
             background-color: var(--primary-blue-hover);
         }
 
-        .divider {
-            display: flex;
-            align-items: center;
-            text-align: center;
-            margin: 2rem 0;
-            color: var(--text-muted);
-            font-size: 0.75rem;
-            letter-spacing: 0.05em;
-        }
-
-        .divider::before, .divider::after {
-            content: '';
-            flex: 1;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .divider::before { margin-right: 1em; }
-        .divider::after { margin-left: 1em; }
-
-        .social-login {
-            display: flex;
-            justify-content: center;
-            gap: 1rem;
-            margin-bottom: 2rem;
-        }
-
-        .social-btn {
-            background-color: var(--bg-input);
-            border: 1px solid var(--border-color);
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            transition: all 0.3s;
-            color: var(--text-primary);
-            font-size: 1.2rem;
-        }
-
-        .social-btn:hover {
-            background-color: var(--border-color);
-        }
-        
-        .social-btn.blue-icon {
-            color: var(--primary-blue);
-        }
-
-        .login-link {
-            text-align: center;
-            font-size: 0.85rem;
+        .secondary-btn {
+            background-color: transparent;
             color: var(--text-secondary);
-        }
-
-        .login-link a {
-            color: var(--label-color);
-            text-decoration: none;
-            font-weight: 500;
-        }
-
-        .footer-info {
-            display: flex;
-            justify-content: space-between;
+            border: 1px solid var(--border-color);
+            border-radius: 25px;
+            padding: 1rem;
             width: 100%;
-            max-width: 420px;
-            margin-top: 2rem;
-            font-size: 0.75rem;
-            color: var(--text-muted);
-        }
-
-        .footer-links {
-            display: flex;
-            gap: 1rem;
-        }
-
-        .footer-links a {
-            color: var(--text-muted);
-            text-decoration: none;
-        }
-
-        /* --- ESTILOS DE LA PANTALLA DE VERIFICACIÓN --- */
-        .shield-icon {
-            font-size: 3rem;
-            color: var(--primary-blue);
-            margin-bottom: 1.5rem;
-            filter: drop-shadow(0 0 20px rgba(59, 130, 246, 0.4));
-        }
-
-        .verify-title {
-            font-size: 1.6rem;
-            font-weight: 700;
-            text-align: center;
-            margin-bottom: 0.8rem;
-        }
-
-        .verify-subtitle {
-            color: var(--text-secondary);
-            font-size: 0.95rem;
-            text-align: center;
-            line-height: 1.5;
-            max-width: 350px;
-            margin-bottom: 2rem;
-        }
-
-        .code-inputs {
-            display: flex;
-            justify-content: space-between;
-            gap: 10px;
-            margin-bottom: 1.5rem;
-        }
-
-        .code-input {
-            width: 50px;
-            height: 60px;
-            background-color: var(--bg-input);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            color: var(--text-primary);
-            font-size: 1.5rem;
-            text-align: center;
-            font-weight: 600;
-            transition: all 0.3s;
-            outline: none;
-        }
-
-        .code-input:focus {
-            border-color: var(--primary-blue);
-            box-shadow: 0 0 10px rgba(59, 130, 246, 0.2);
-        }
-
-        .timer {
-            text-align: center;
-            color: var(--text-secondary);
-            font-size: 0.85rem;
-            margin-bottom: 1rem;
-        }
-
-        .timer .time {
-            color: var(--primary-blue);
-            font-weight: 600;
-        }
-
-        .resend {
-            text-align: center;
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-            margin-bottom: 1.5rem;
-        }
-
-        .resend a {
-            color: var(--label-color);
-            text-decoration: none;
+            font-size: 1rem;
             font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 1rem;
+            transition: all 0.3s;
         }
 
-        .verify-footer {
-            margin-top: 2.5rem;
-            text-align: center;
-            color: var(--text-muted);
-            font-size: 0.8rem;
-            line-height: 1.6;
+        .secondary-btn:hover {
+            background-color: rgba(255,255,255,0.05);
+            color: var(--text-primary);
         }
 
-        .footer-links-inline {
-            margin-top: 0.5rem;
+        /* --- VISTA 1: REGISTRO --- */
+        .card-header h1 { font-size: 1.5rem; font-weight: 600; margin-bottom: 0.5rem; }
+        .card-header p { color: var(--text-secondary); font-size: 0.9rem; line-height: 1.5; margin-bottom: 2rem; }
+        
+        .input-group { position: relative; margin-bottom: 1.25rem; }
+        .input-group label { position: absolute; top: -7px; left: 15px; background-color: var(--bg-card); padding: 0 5px; font-size: 0.65rem; font-weight: 700; color: var(--label-color); z-index: 1; }
+        .input-wrapper { display: flex; align-items: center; background-color: var(--bg-input); border: 1px solid var(--border-color); border-radius: 12px; padding: 0.8rem 1rem; }
+        .input-wrapper i { color: var(--text-secondary); margin-right: 10px; font-size: 1.1rem; }
+        .input-wrapper input { background: transparent; border: none; color: var(--text-primary); width: 100%; outline: none; font-size: 0.9rem; }
+        
+        .checkbox-group { display: flex; align-items: flex-start; gap: 10px; margin: 1.5rem 0; }
+        .checkbox-group input[type="checkbox"] { appearance: none; border: 2px solid var(--border-color); border-radius: 50%; width: 20px; height: 20px; cursor: pointer; position: relative; flex-shrink: 0; }
+        .checkbox-group input[type="checkbox"]:checked { background-color: var(--primary-blue); border-color: var(--primary-blue); }
+        .checkbox-group label { font-size: 0.8rem; color: var(--text-secondary); cursor: pointer; }
+        .checkbox-group label a { color: var(--label-color); text-decoration: none; }
+
+        /* --- VISTA 2: VERIFICACIÓN --- */
+        .shield-icon { font-size: 3rem; color: var(--primary-blue); margin-bottom: 1.5rem; filter: drop-shadow(0 0 20px rgba(59, 130, 246, 0.4)); margin-top: 2rem; }
+        .verify-title { font-size: 1.6rem; font-weight: 700; text-align: center; margin-bottom: 0.8rem; }
+        .verify-subtitle { color: var(--text-secondary); font-size: 0.95rem; text-align: center; max-width: 350px; margin-bottom: 2rem; }
+        
+        /* CORRECCIÓN DE DESBORDAMIENTO EN LOS CUADROS */
+        .code-inputs { 
+            display: flex; 
+            justify-content: space-between; 
+            gap: 8px; /* Espacio moderado */
+            margin-bottom: 1.5rem; 
+            width: 100%; /* Evita que crezca más que su contenedor */
         }
         
-        .footer-links-inline a {
-            color: var(--text-muted);
-            text-decoration: none;
-            margin: 0 0.5rem;
+        .code-input { 
+            flex: 1; /* Hace que se adapten y encojan según el espacio */
+            max-width: 50px; /* Tamaño máximo para que no se vean gigantes en pantallas grandes */
+            height: 60px; 
+            background-color: var(--bg-input); 
+            border: 1px solid var(--border-color); 
+            border-radius: 8px; 
+            color: var(--text-primary); 
+            font-size: 1.5rem; 
+            text-align: center; 
+            font-weight: 600; 
+            outline: none; 
+            transition: all 0.3s;
         }
+
+        .code-input:focus { border-color: var(--primary-blue); box-shadow: 0 0 10px rgba(59, 130, 246, 0.2); }
+        
+        .timer { text-align: center; color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 1rem; }
+        .timer .time { color: var(--primary-blue); font-weight: 600; }
+        .resend { text-align: center; font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1.5rem; }
+        .resend a { color: var(--label-color); text-decoration: none; }
+
+        /* --- VISTA 3: NOTIFICACIONES --- */
+        .graphic-container { position: relative; height: 220px; display: flex; justify-content: center; align-items: center; margin-bottom: 1rem; width: 100%; }
+        .bell-bg-circle { width: 140px; height: 140px; border-radius: 50%; background-color: #1e2430; display: flex; justify-content: center; align-items: center; position: relative; }
+        .bell-inner-circle { width: 90px; height: 90px; border-radius: 50%; background-color: #253347; display: flex; justify-content: center; align-items: center; box-shadow: 0 0 30px rgba(59, 130, 246, 0.2); }
+        .bell-inner-circle i { font-size: 2.5rem; color: var(--primary-blue); filter: drop-shadow(0 0 10px rgba(59, 130, 246, 0.5)); }
+        .floating-badge { position: absolute; background-color: var(--bg-card); border: 1px solid var(--border-color); padding: 0.6rem 1rem; border-radius: 20px; font-size: 0.75rem; font-weight: 600; display: flex; align-items: center; gap: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.5); letter-spacing: 0.5px; }
+        .badge-en-camino { top: 20px; right: 10px; }
+        .badge-en-camino i { color: var(--success-color); font-size: 0.9rem;}
+        .badge-managua { bottom: 20px; left: 10px; }
+        .badge-managua i { color: var(--text-secondary); font-size: 0.9rem;}
+        .features-list { margin: 2rem 0; }
+        .feature-item { display: flex; align-items: center; gap: 15px; margin-bottom: 1.2rem; }
+        .feature-icon { width: 36px; height: 36px; border-radius: 50%; background-color: var(--bg-input); display: flex; justify-content: center; align-items: center; color: var(--text-secondary); font-size: 0.9rem; flex-shrink: 0; }
+        .feature-text { font-size: 0.85rem; color: var(--text-secondary); line-height: 1.4; }
+        .small-footer-text { text-align: center; font-size: 0.75rem; color: var(--text-muted); margin-top: 1.5rem; line-height: 1.4; }
+
+        /* --- VISTA 4: UBICACIÓN --- */
+        .map-graphic { width: 200px; height: 200px; border-radius: 32px; background: linear-gradient(135deg, #161b22 0%, #0d1117 100%); border: 1px solid var(--border-color); margin: 0 auto 2.5rem auto; position: relative; display: flex; justify-content: center; align-items: center; box-shadow: 0 15px 35px rgba(0,0,0,0.4); overflow: hidden; }
+        .map-graphic::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-image: linear-gradient(rgba(59, 130, 246, 0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(59, 130, 246, 0.1) 1px, transparent 1px); background-size: 20px 20px; transform: perspective(300px) rotateX(60deg) scale(2); opacity: 0.5; }
+        .map-circles { position: absolute; width: 120px; height: 120px; border-radius: 50%; border: 1px solid rgba(59, 130, 246, 0.3); display: flex; justify-content: center; align-items: center; }
+        .map-circles::before { content: ''; width: 70px; height: 70px; border-radius: 50%; border: 1px solid rgba(59, 130, 246, 0.5); background: radial-gradient(circle, rgba(59, 130, 246, 0.15) 0%, transparent 70%); }
+        .map-pin { font-size: 3rem; color: var(--primary-blue); z-index: 10; filter: drop-shadow(0 10px 10px rgba(0,0,0,0.5)); position: relative; top: -5px; }
+        .center-text-card { display: flex; flex-direction: column; text-align: center; border: none; background: transparent; box-shadow: none; padding: 0 1rem; }
+        .center-text-card h1 { font-size: 1.8rem; font-weight: 700; margin-bottom: 1rem; line-height: 1.2; }
+        .center-text-card p { color: var(--text-secondary); font-size: 0.95rem; line-height: 1.5; margin-bottom: 2rem; }
     </style>
 </head>
 <body>
@@ -401,13 +229,10 @@
     <!-- ==========================================
          VISTA 1: CREAR CUENTA
          ========================================== -->
-    <div id="register-view">
+    <div id="register-view" class="view-container active">
         <div class="logo-container">
             <span class="logo-x">X</span>
-            <div class="logo-text">
-                INCOEX
-                <span>Logistics</span>
-            </div>
+            <div class="logo-text">INCOEX<span>Logistics</span></div>
         </div>
 
         <div class="card">
@@ -416,7 +241,6 @@
                 <p>Únete a la red logística global de INCOEX.</p>
             </div>
 
-            <!-- Se agregó el id="register-form" para capturarlo con JS -->
             <form id="register-form">
                 <div class="input-group">
                     <label>NOMBRE COMPLETO</label>
@@ -425,15 +249,6 @@
                         <input type="text" placeholder="Juan Pérez" required>
                     </div>
                 </div>
-
-                <div class="input-group">
-                    <label>EMPRESA</label>
-                    <div class="input-wrapper">
-                        <i class="fa-regular fa-building"></i>
-                        <input type="text" placeholder="Logistics Corp S.A.">
-                    </div>
-                </div>
-
                 <div class="input-group">
                     <label>CORREO ELECTRÓNICO</label>
                     <div class="input-wrapper">
@@ -441,15 +256,6 @@
                         <input type="email" placeholder="ejemplo@gmail.com" required>
                     </div>
                 </div>
-
-                <div class="input-group">
-                    <label>TELÉFONO</label>
-                    <div class="input-wrapper">
-                        <i class="fa-solid fa-phone"></i>
-                        <input type="tel" placeholder="+34 000 000 000">
-                    </div>
-                </div>
-
                 <div class="input-group">
                     <label>CONTRASEÑA</label>
                     <div class="input-wrapper">
@@ -458,123 +264,162 @@
                     </div>
                 </div>
 
-                <div class="input-group">
-                    <label>CONFIRMAR CONTRASEÑA</label>
-                    <div class="input-wrapper">
-                        <i class="fa-solid fa-shield-halved"></i>
-                        <input type="password" placeholder="••••••••" required>
-                    </div>
-                </div>
-
                 <div class="checkbox-group">
                     <input type="checkbox" id="terms" required>
-                    <label for="terms">
-                        Acepto los <a href="#">términos y condiciones</a> de uso y la política de privacidad de INCOEX.
-                    </label>
+                    <label for="terms">Acepto los <a href="#">términos y condiciones</a>.</label>
                 </div>
 
                 <button type="submit" class="submit-btn">
                     Crear Cuenta <i class="fa-solid fa-arrow-right"></i>
                 </button>
             </form>
-
-            <div class="divider">O REGÍSTRATE CON</div>
-
-            <div class="social-login">
-                <button class="social-btn" type="button">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" alt="Google" width="20">
-                </button>
-                <button class="social-btn" type="button">
-                    <i class="fa-solid fa-grip"></i>
-                </button>
-                <button class="social-btn blue-icon" type="button">
-                    <i class="fa-solid fa-circle-nodes"></i>
-                </button>
-            </div>
-
-            <div class="login-link">
-                ¿Ya tienes una cuenta? <a href="#">Iniciar Sesión</a>
-            </div>
-        </div>
-
-        <div class="footer-info">
-            <div><i class="fa-solid fa-lock"></i> Encriptación 256-bit</div>
-            <div class="footer-links">
-                <a href="#">Soporte</a>
-                <a href="#">Legal</a>
-            </div>
         </div>
     </div>
 
     <!-- ==========================================
          VISTA 2: VERIFICACIÓN DE IDENTIDAD
          ========================================== -->
-    <div id="verification-view">
-        <div class="shield-icon">
-            <i class="fa-solid fa-shield-heart"></i>
-        </div>
-        
+    <div id="verification-view" class="view-container">
+        <div class="shield-icon"><i class="fa-solid fa-shield-heart"></i></div>
         <h1 class="verify-title">Verificación de<br>Identidad</h1>
         <p class="verify-subtitle">Hemos enviado un código de seguridad de 6 dígitos a su correo electrónico asociado.</p>
 
         <div class="card">
             <div class="code-inputs">
-                <!-- Se generan 6 casillas para los 6 dígitos -->
-                <input type="text" maxlength="1" class="code-input" autofocus>
-                <input type="text" maxlength="1" class="code-input">
-                <input type="text" maxlength="1" class="code-input">
-                <input type="text" maxlength="1" class="code-input">
-                <input type="text" maxlength="1" class="code-input">
-                <input type="text" maxlength="1" class="code-input">
+                <!-- Se agregó inputmode="numeric" para sacar teclado numérico en móviles -->
+                <input type="text" inputmode="numeric" maxlength="1" class="code-input">
+                <input type="text" inputmode="numeric" maxlength="1" class="code-input">
+                <input type="text" inputmode="numeric" maxlength="1" class="code-input">
+                <input type="text" inputmode="numeric" maxlength="1" class="code-input">
+                <input type="text" inputmode="numeric" maxlength="1" class="code-input">
+                <input type="text" inputmode="numeric" maxlength="1" class="code-input">
             </div>
             
-            <div class="timer">
-                <i class="fa-regular fa-clock"></i> El código expira en: <span class="time">01:58</span>
-            </div>
+            <div class="timer"><i class="fa-regular fa-clock"></i> El código expira en: <span class="time" id="countdown-text">01:58</span></div>
+            <div class="resend">¿No recibiste el código? <a href="#">Reenviar código</a></div>
             
-            <div class="resend">
-                ¿No recibiste el código? <a href="#">Reenviar código</a>
-            </div>
-            
-            <button type="button" class="submit-btn">
+            <button type="button" id="btn-verify" class="submit-btn">
                 Verificar <i class="fa-solid fa-arrow-right"></i>
             </button>
         </div>
+    </div>
 
-        <div class="verify-footer">
-            <p>© 2026 INCOEX Logistics. Seguridad Empresarial.</p>
-            <div class="footer-links-inline">
-                <a href="#">Soporte</a> &bull; <a href="#">Privacidad</a>
+    <!-- ==========================================
+         VISTA 3: NOTIFICACIONES
+         ========================================== -->
+    <div id="notifications-view" class="view-container">
+        <div class="logo-container">
+            <span class="logo-x">X</span>
+            <div class="logo-text">INCOEX<span>Logistics</span></div>
+        </div>
+
+        <div class="graphic-container">
+            <div class="bell-bg-circle">
+                <div class="bell-inner-circle"><i class="fa-solid fa-bell"></i></div>
             </div>
+            <div class="floating-badge badge-en-camino"><i class="fa-solid fa-circle-check"></i> EN CAMINO</div>
+            <div class="floating-badge badge-managua"><i class="fa-solid fa-location-dot"></i> MANAGUA</div>
+        </div>
+
+        <div class="card">
+            <h1 class="verify-title" style="margin-bottom: 1rem;">Activa las<br>notificaciones</h1>
+            <p class="verify-subtitle" style="margin: 0 auto;">Recibe actualizaciones en tiempo real sobre el estado de tus envíos y alertas de entrega.</p>
+            <div class="features-list">
+                <div class="feature-item"><div class="feature-icon"><i class="fa-solid fa-inbox"></i></div><div class="feature-text">Alertas de cambio de estado instantáneas</div></div>
+                <div class="feature-item"><div class="feature-icon"><i class="fa-solid fa-map"></i></div><div class="feature-text">Seguimiento GPS en vivo para última milla</div></div>
+            </div>
+            <button type="button" id="btn-allow-notif" class="submit-btn">Permitir <i class="fa-solid fa-arrow-right"></i></button>
+            <button type="button" id="btn-later-notif" class="secondary-btn">Más tarde</button>
         </div>
     </div>
 
-    <!-- SCRIPT PARA MANEJAR LA LÓGICA -->
+    <!-- ==========================================
+         VISTA 4: UBICACIÓN
+         ========================================== -->
+    <div id="location-view" class="view-container">
+        <div class="logo-container">
+            <span class="logo-x">X</span>
+            <div class="logo-text">INCOEX<span>Logistics</span></div>
+        </div>
+        <div class="map-graphic">
+            <div class="map-circles"></div>
+            <i class="fa-solid fa-location-dot map-pin"></i>
+        </div>
+        <div class="card center-text-card">
+            <h1>Permite acceder a tu ubicación</h1>
+            <p>Necesitamos tu ubicación para calcular rutas y encontrar el vehículo más cercano.</p>
+            <button type="button" id="btn-allow-loc" class="submit-btn"><i class="fa-regular fa-paper-plane"></i> Permitir</button>
+            <button type="button" id="btn-later-loc" class="secondary-btn">Ahora no</button>
+        </div>
+    </div>
+
+    <!-- SCRIPT DE LÓGICA -->
     <script>
-        // Transición de pantallas
+        // Función para cambiar de vistas
+        function switchView(hideId, showId) {
+            document.getElementById(hideId).classList.remove('active');
+            document.getElementById(showId).classList.add('active');
+        }
+
+        // Lógica del Temporizador
+        let timerInterval;
+        function startTimer() {
+            let timeLeft = 118; // 1 minuto y 58 segundos
+            const timeDisplay = document.getElementById('countdown-text');
+            
+            clearInterval(timerInterval); // Limpia por si acaso ya había uno corriendo
+            
+            timerInterval = setInterval(() => {
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    timeDisplay.textContent = "00:00";
+                    // Aquí podrías habilitar el botón de "Reenviar código"
+                } else {
+                    let m = Math.floor(timeLeft / 60).toString().padStart(2, '0');
+                    let s = (timeLeft % 60).toString().padStart(2, '0');
+                    timeDisplay.textContent = `${m}:${s}`;
+                    timeLeft--;
+                }
+            }, 1000);
+        }
+
+        // 1. Registro -> Verificación
         document.getElementById('register-form').addEventListener('submit', function(e) {
-            e.preventDefault(); // Evita que la página se recargue
-            
-            // Ocultar formulario de registro
-            document.getElementById('register-view').style.display = 'none';
-            
-            // Mostrar formulario de verificación
-            document.getElementById('verification-view').style.display = 'flex';
+            e.preventDefault();
+            switchView('register-view', 'verification-view');
+            startTimer(); // Iniciamos el contador al llegar a esta pantalla
         });
 
-        // Lógica para saltar automáticamente al siguiente input de verificación
+        // 2. Verificación -> Notificaciones
+        document.getElementById('btn-verify').addEventListener('click', function() {
+            switchView('verification-view', 'notifications-view');
+        });
+
+        // 3. Notificaciones -> Ubicación
+        document.getElementById('btn-allow-notif').addEventListener('click', function() {
+            switchView('notifications-view', 'location-view');
+        });
+        document.getElementById('btn-later-notif').addEventListener('click', function() {
+            switchView('notifications-view', 'location-view');
+        });
+
+        // Lógica de Inputs de Código (Solo Números y Salto Automático)
         const codeInputs = document.querySelectorAll('.code-input');
         
         codeInputs.forEach((input, index) => {
-            input.addEventListener('input', () => {
-                if(input.value.length === 1 && index < codeInputs.length - 1) {
+            input.addEventListener('input', (e) => {
+                // EXPRESIÓN REGULAR: Remueve cualquier cosa que no sea número (0-9)
+                input.value = input.value.replace(/[^0-9]/g, '');
+
+                // Si hay un número y no estamos en la última casilla, saltar a la siguiente
+                if(input.value !== '' && index < codeInputs.length - 1) {
                     codeInputs[index + 1].focus();
                 }
             });
 
-            // Permite borrar con Backspace y regresar al input anterior
+            // Permitir borrar y regresar a la casilla anterior con Backspace
             input.addEventListener('keydown', (e) => {
-                if (e.key === 'Backspace' && input.value.length === 0 && index > 0) {
+                if (e.key === 'Backspace' && input.value === '' && index > 0) {
                     codeInputs[index - 1].focus();
                 }
             });

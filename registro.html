@@ -345,13 +345,18 @@
             <div class="map-circles"></div>
             <i class="fa-solid fa-location-dot map-pin"></i>
         </div>
-        <div class="card center-text-card">
+<div class="card center-text-card">
             <h1>Permite acceder a tu ubicación</h1>
             <p>Necesitamos tu ubicación para calcular rutas y encontrar el vehículo más cercano.</p>
-            <button type="button" id="btn-allow-loc" class="submit-btn"><i class="fa-regular fa-paper-plane"></i> Permitir</button>
-            <button type="button" id="btn-later-loc" class="secondary-btn">Ahora no</button>
+            
+            <button type="button" id="btn-allow-loc" class="submit-btn" onclick="window.location.href='dashboard.html'">
+                <i class="fa-regular fa-paper-plane"></i> Permitir
+            </button>
+            
+            <button type="button" id="btn-later-loc" class="secondary-btn" onclick="window.location.href='dashboard.html'">
+                Ahora no
+            </button>
         </div>
-    </div>
 
     <!-- SCRIPT DE LÓGICA -->
     <script>

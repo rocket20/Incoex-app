@@ -32,7 +32,6 @@
         .logo { font-weight: 700; font-size: 16px; color: var(--primary-blue); }
         .logo span { color: white; }
         .user-actions { display: flex; align-items: center; gap: 15px; }
-        
         .notification-badge { position: relative; }
         .notification-badge::after { content: '3'; position: absolute; top: -5px; right: -5px; background: var(--primary-blue); color: white; font-size: 9px; font-weight: bold; width: 14px; height: 14px; border-radius: 50%; display: flex; justify-content: center; align-items: center; }
 
@@ -42,76 +41,177 @@
         .order-icon { width: 36px; height: 36px; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 10px; display: flex; justify-content: center; align-items: center; color: var(--text-muted); }
         .order-info h2 { font-size: 16px; margin-bottom: 4px; }
         .order-route { font-size: 12px; color: var(--text-muted); display: flex; align-items: center; gap: 8px; }
-        .status-badge { background-color: rgba(59, 130, 246, 0.15); color: var(--primary-blue); padding: 6px 12px; border-radius: 20px; font-size: 11px; font-weight: 600; display: flex; align-items: center; gap: 6px; }
+        .status-badge { background-color: rgba(59, 130, 246, 0.15); color: var(--primary-blue); padding: 6px 12px; border-radius: 20px; font-size: 11px; font-weight: 600; display: flex; align-items: center; gap: 6px; white-space: nowrap; }
         .status-badge i { font-size: 8px; animation: pulseStatus 2s infinite; }
+        @keyframes pulseStatus { 0% { opacity: 0.4; } 50% { opacity: 1; } 100% { opacity: 0.4; } }
 
-        @keyframes pulseStatus { 0% { opacity: 0.4; } 50% { opacity: 1; box-shadow: 0 0 8px var(--primary-blue); } 100% { opacity: 0.4; } }
-
-        /* Map Animation Container */
-        .map-container { 
-            height: 220px; margin: 0 20px; border-radius: 16px; position: relative; overflow: hidden;
-            background: radial-gradient(circle at center, #2a2e33 0%, #151719 100%);
+        /* ============================================
+           MAPA INTERACTIVO MEJORADO
+        ============================================ */
+        .map-wrapper {
+            margin: 0 20px;
+            border-radius: 16px;
+            overflow: hidden;
             border: 1px solid var(--border-color);
-            display: flex; justify-content: center; align-items: center;
+            position: relative;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.6);
         }
-        
-        /* Grid de fondo simulando mapa */
-        .map-grid { position: absolute; width: 100%; height: 100%; background-image: linear-gradient(var(--border-color) 1px, transparent 1px), linear-gradient(90deg, var(--border-color) 1px, transparent 1px); background-size: 30px 30px; opacity: 0.2; }
 
-        /* SVG Ruta Animada */
-        .route-svg { position: absolute; width: 100%; height: 100%; top: 0; left: 0; }
-        .route-path-bg { fill: none; stroke: rgba(255,255,255,0.1); stroke-width: 4; }
-        .route-path-active { fill: none; stroke: var(--primary-blue); stroke-width: 4; stroke-dasharray: 12 12; animation: flowRoute 1.5s linear infinite; }
-        
-        @keyframes flowRoute { to { stroke-dashoffset: -24; } }
+        #mapCanvas {
+            display: block;
+            width: 100%;
+            height: 260px;
+            cursor: grab;
+        }
+        #mapCanvas:active { cursor: grabbing; }
 
-        /* Pines del mapa */
-        .map-pin { position: absolute; display: flex; flex-direction: column; align-items: center; gap: 4px; z-index: 2; }
-        .map-pin.origin { left: 15%; top: 60%; }
-        .map-pin.destination { right: 15%; top: 20%; }
-        .map-pin.truck { left: 55%; top: 38%; animation: floatTruck 2s ease-in-out infinite; }
+        /* Overlay de controles del mapa */
+        .map-controls {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            z-index: 10;
+        }
+        .map-ctrl-btn {
+            width: 32px;
+            height: 32px;
+            background: rgba(28, 31, 34, 0.92);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-main);
+            font-size: 13px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.2s;
+            backdrop-filter: blur(6px);
+        }
+        .map-ctrl-btn:hover { background: var(--primary-blue); border-color: var(--primary-blue); }
 
-        @keyframes floatTruck { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
+        /* Badge de velocidad en el mapa */
+        .map-speed-badge {
+            position: absolute;
+            bottom: 12px;
+            left: 12px;
+            background: rgba(28, 31, 34, 0.92);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 6px 10px;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            backdrop-filter: blur(6px);
+            z-index: 10;
+        }
+        .speed-dot { width: 7px; height: 7px; background: var(--success-green); border-radius: 50%; animation: pulseStatus 1.5s infinite; }
 
-        .pin-dot { width: 14px; height: 14px; background: var(--primary-blue); border-radius: 50%; box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.3); }
-        .pin-label { background: var(--card-bg); padding: 4px 8px; border-radius: 8px; font-size: 10px; font-weight: 600; border: 1px solid var(--border-color); }
-        .truck-icon { width: 32px; height: 32px; background: var(--card-bg); border: 2px solid var(--primary-blue); border-radius: 50%; display: flex; justify-content: center; align-items: center; color: white; font-size: 14px; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
-        .target-icon { position: absolute; top: 15px; right: 15px; width: 35px; height: 35px; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 50%; display: flex; justify-content: center; align-items: center; color: var(--text-main); font-size: 14px; z-index: 3; }
+        /* Badge de progreso en el mapa */
+        .map-progress-badge {
+            position: absolute;
+            bottom: 12px;
+            right: 12px;
+            background: rgba(59, 130, 246, 0.2);
+            border: 1px solid rgba(59, 130, 246, 0.4);
+            border-radius: 10px;
+            padding: 6px 10px;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--primary-blue);
+            backdrop-filter: blur(6px);
+            z-index: 10;
+        }
+
+        /* Barra de progreso de ruta debajo del mapa */
+        .route-progress-bar {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-top: none;
+            border-radius: 0 0 16px 16px;
+            padding: 10px 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .route-label { font-size: 10px; color: var(--text-muted); font-weight: 600; white-space: nowrap; }
+        .progress-track {
+            flex: 1;
+            height: 4px;
+            background: var(--border-color);
+            border-radius: 2px;
+            overflow: hidden;
+            position: relative;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-blue), #60a5fa);
+            border-radius: 2px;
+            width: 55%;
+            position: relative;
+            transition: width 0.5s ease;
+        }
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 8px;
+            height: 8px;
+            background: white;
+            border-radius: 50%;
+            box-shadow: 0 0 6px var(--primary-blue);
+        }
 
         /* Stats Grid */
         .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; padding: 20px; }
-        .stat-card { background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; padding: 15px 10px; text-align: center; }
-        .stat-card i { color: var(--text-muted); margin-bottom: 10px; font-size: 18px; }
+        .stat-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 15px 10px;
+            text-align: center;
+            transition: border-color 0.3s, transform 0.2s;
+            cursor: default;
+        }
+        .stat-card:hover { border-color: var(--primary-blue); transform: translateY(-2px); }
+        .stat-card i { color: var(--text-muted); margin-bottom: 10px; font-size: 18px; transition: color 0.3s; }
+        .stat-card:hover i { color: var(--primary-blue); }
         .stat-card p { font-size: 10px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 4px; font-weight: 600; }
         .stat-card h4 { font-size: 14px; margin-bottom: 2px; }
         .stat-card span { font-size: 11px; color: var(--text-muted); }
 
         /* Driver Info */
-        .driver-card { background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; padding: 15px; margin: 0 20px 20px; display: flex; justify-content: space-between; align-items: center; }
+        .driver-card { background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; padding: 15px; margin: 0 20px 20px; display: flex; justify-content: space-between; align-items: center; transition: border-color 0.3s; }
+        .driver-card:hover { border-color: rgba(59,130,246,0.4); }
         .driver-left { display: flex; align-items: center; gap: 15px; }
-        .driver-avatar { width: 45px; height: 45px; background-color: #374151; border-radius: 50%; display: flex; justify-content: center; align-items: center; overflow: hidden; }
-        .driver-avatar img { width: 100%; height: 100%; object-fit: cover; }
+        .driver-avatar { width: 45px; height: 45px; background: linear-gradient(135deg, #374151, #4b5563); border-radius: 50%; display: flex; justify-content: center; align-items: center; overflow: hidden; border: 2px solid var(--border-color); }
         .driver-info p.label { font-size: 10px; color: var(--text-muted); text-transform: uppercase; font-weight: 600; margin-bottom: 2px; }
         .driver-info h4 { font-size: 14px; margin-bottom: 4px; }
         .driver-info p.vehicle { font-size: 11px; color: var(--text-muted); display: flex; align-items: center; gap: 6px; }
         .plate-badge { background-color: var(--input-bg); border: 1px solid var(--border-color); padding: 2px 6px; border-radius: 6px; font-size: 10px; font-weight: 600; color: var(--text-main); }
+        .driver-actions { display: flex; gap: 8px; }
         .btn-call { width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--primary-blue); color: var(--primary-blue); background: rgba(59, 130, 246, 0.1); font-size: 16px; cursor: pointer; display: flex; justify-content: center; align-items: center; transition: 0.3s; }
-        .btn-call:hover { background: var(--primary-blue); color: white; }
+        .btn-call:hover { background: var(--primary-blue); color: white; transform: scale(1.1); }
+        .btn-chat { width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--border-color); color: var(--text-muted); background: transparent; font-size: 14px; cursor: pointer; display: flex; justify-content: center; align-items: center; transition: 0.3s; }
+        .btn-chat:hover { background: var(--card-bg); color: var(--text-main); border-color: var(--text-muted); }
 
-        /* Timeline Horizontal */
+        /* Timeline */
         .timeline-card { background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; padding: 20px 10px; margin: 0 20px 20px; overflow-x: auto; }
         .timeline { display: flex; justify-content: space-between; position: relative; min-width: 320px; padding: 0 10px; }
-        
         .timeline-line { position: absolute; top: 16px; left: 30px; right: 30px; height: 2px; background-color: var(--border-color); z-index: 1; }
-        .timeline-progress { position: absolute; top: 16px; left: 30px; width: 70%; height: 2px; background-color: var(--primary-blue); z-index: 2; }
-        
+        .timeline-progress-line { position: absolute; top: 16px; left: 30px; width: 70%; height: 2px; background: linear-gradient(90deg, var(--primary-blue), #60a5fa); z-index: 2; border-radius: 2px; }
         .step { display: flex; flex-direction: column; align-items: center; position: relative; z-index: 3; width: 25%; gap: 6px; }
         .step-icon { width: 34px; height: 34px; border-radius: 50%; background-color: var(--card-bg); border: 2px solid var(--border-color); color: var(--text-muted); display: flex; justify-content: center; align-items: center; font-size: 12px; transition: 0.3s; }
-        
-        /* Estados del step */
         .step.completed .step-icon { background-color: var(--primary-blue); border-color: var(--primary-blue); color: white; }
-        .step.active .step-icon { background-color: var(--card-bg); border-color: var(--primary-blue); color: var(--primary-blue); box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2); }
-        
+        .step.active .step-icon { background-color: var(--card-bg); border-color: var(--primary-blue); color: var(--primary-blue); box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2); animation: pulseStep 2s ease-in-out infinite; }
+        @keyframes pulseStep { 0%,100% { box-shadow: 0 0 0 4px rgba(59,130,246,0.2); } 50% { box-shadow: 0 0 0 7px rgba(59,130,246,0.1); } }
         .step h5 { font-size: 10px; text-align: center; font-weight: 600; color: var(--text-muted); }
         .step.completed h5, .step.active h5 { color: var(--text-main); }
         .step p { font-size: 9px; color: var(--text-muted); text-align: center; }
@@ -120,14 +220,16 @@
         .section-header { display: flex; justify-content: space-between; align-items: center; margin: 0 20px 15px; }
         .section-header h3 { font-size: 14px; display: flex; align-items: center; gap: 8px; }
         .evidences-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 0 20px 20px; }
-        .evidence-card { background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; overflow: hidden; padding-bottom: 12px; }
-        .evidence-img { height: 90px; background-color: var(--input-bg); display: flex; justify-content: center; align-items: center; color: var(--border-color); font-size: 30px; }
+        .evidence-card { background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; overflow: hidden; padding-bottom: 12px; transition: border-color 0.3s, transform 0.2s; cursor: pointer; }
+        .evidence-card:hover { border-color: rgba(59,130,246,0.4); transform: translateY(-2px); }
+        .evidence-img { height: 90px; background-color: var(--input-bg); display: flex; justify-content: center; align-items: center; color: #3a3f46; font-size: 30px; transition: color 0.3s; }
+        .evidence-card:hover .evidence-img { color: var(--primary-blue); }
         .evidence-info { padding: 10px 12px 0; }
         .evidence-info h5 { font-size: 11px; margin-bottom: 4px; }
         .evidence-info p { font-size: 10px; color: var(--text-muted); margin-bottom: 8px; }
         .badge-verified { display: inline-flex; align-items: center; gap: 4px; background-color: rgba(16, 185, 129, 0.15); color: var(--success-green); padding: 4px 8px; border-radius: 4px; font-size: 9px; font-weight: 600; }
 
-        /* Tarifa Box */
+        /* Tarifa */
         .price-box { background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; padding: 20px; margin: 0 20px 20px; display: flex; justify-content: space-between; align-items: center; }
         .price-left { display: flex; align-items: center; gap: 15px; }
         .price-icon { width: 45px; height: 45px; background-color: var(--input-bg); border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 16px; font-weight: 700; border: 1px solid var(--border-color); }
@@ -136,198 +238,706 @@
         .price-details p.desc { font-size: 11px; color: var(--text-muted); }
         .btn-link { color: var(--primary-blue); font-size: 12px; text-decoration: none; font-weight: 500; display: flex; align-items: center; gap: 5px; }
 
-        /* Report Button */
+        /* Report */
         .btn-report { background-color: transparent; border: 1px solid var(--border-color); color: var(--text-main); width: calc(100% - 40px); margin: 0 20px 20px; padding: 16px; border-radius: 16px; font-size: 13px; font-weight: 600; display: flex; justify-content: center; align-items: center; gap: 8px; cursor: pointer; transition: 0.3s; }
-        .btn-report:hover { background-color: var(--card-bg); border-color: var(--text-muted); }
+        .btn-report:hover { background-color: rgba(239, 68, 68, 0.08); border-color: rgba(239, 68, 68, 0.4); color: #f87171; }
+        .btn-report:hover i { color: #f87171; }
 
-        /* Bottom Nav con botón central resaltado */
+        /* Bottom Nav */
         .bottom-nav { position: fixed; bottom: 0; width: 100%; max-width: 450px; background-color: var(--nav-bg); display: flex; justify-content: space-around; align-items: center; padding: 10px 10px 20px; border-top: 1px solid var(--border-color); z-index: 100; }
         .nav-item { display: flex; flex-direction: column; align-items: center; gap: 6px; color: var(--text-muted); text-decoration: none; font-size: 10px; cursor: pointer; transition: 0.3s; }
         .nav-item i { font-size: 18px; }
-        
         .nav-item.prominent { background-color: var(--primary-blue); color: white; width: 55px; height: 55px; border-radius: 50%; justify-content: center; transform: translateY(-20px); box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4); border: 4px solid var(--bg-color); gap: 2px; }
         .nav-item.prominent i { font-size: 20px; }
         .nav-item:not(.prominent):hover { color: var(--text-main); }
+
+        /* Toast notification */
+        .toast {
+            position: fixed;
+            top: 80px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-20px);
+            background: var(--card-bg);
+            border: 1px solid var(--primary-blue);
+            color: var(--text-main);
+            padding: 10px 18px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.3s ease;
+            z-index: 999;
+            white-space: nowrap;
+            max-width: 90%;
+        }
+        .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
     </style>
 </head>
 <body>
 
-    <div class="app-container">
-        
-        <nav class="top-nav">
-            <div class="nav-left">
-                <a href="dashboard.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i></a>
-                <div class="logo">X<span>INCOEX</span></div>
-            </div>
-            <div class="user-actions">
-                <i class="fa-regular fa-bell notification-badge" style="color:var(--text-muted); font-size:18px;"></i>
-                <i class="fa-regular fa-circle-user" style="color:var(--text-muted); font-size:20px;"></i>
-            </div>
-        </nav>
+<div class="app-container">
 
-        <div class="order-header">
-            <div class="order-info">
-                <div class="order-icon"><i class="fa-solid fa-box-open"></i></div>
-                <div>
-                    <h2>#SL-2025-0458</h2>
-                    <div class="order-route">Managua <i class="fa-solid fa-arrow-right" style="font-size:10px;"></i> León</div>
-                </div>
-            </div>
-            <div class="status-badge">
-                <i class="fa-solid fa-circle"></i> En tránsito
+    <nav class="top-nav">
+        <div class="nav-left">
+            <a href="dashboard.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i></a>
+            <div class="logo">X<span>INCOEX</span></div>
+        </div>
+        <div class="user-actions">
+            <i class="fa-regular fa-bell notification-badge" style="color:var(--text-muted); font-size:18px; cursor:pointer;" onclick="showToast('Tienes 3 notificaciones pendientes')"></i>
+            <i class="fa-regular fa-circle-user" style="color:var(--text-muted); font-size:20px; cursor:pointer;"></i>
+        </div>
+    </nav>
+
+    <div class="order-header">
+        <div class="order-info">
+            <div class="order-icon"><i class="fa-solid fa-box-open"></i></div>
+            <div>
+                <h2>#SL-2025-0458</h2>
+                <div class="order-route">Managua <i class="fa-solid fa-arrow-right" style="font-size:10px;"></i> Leon</div>
             </div>
         </div>
-
-        <div class="map-container">
-            <div class="map-grid"></div>
-            
-            <svg class="route-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
-                <path class="route-path-bg" d="M 15 60 Q 40 10, 85 20" />
-                <path class="route-path-active" d="M 15 60 Q 40 10, 85 20" />
-            </svg>
-
-            <div class="target-icon"><i class="fa-solid fa-crosshairs"></i></div>
-
-            <div class="map-pin origin">
-                <div class="pin-dot"></div>
-                <div class="pin-label">Origen</div>
-            </div>
-
-            <div class="map-pin truck">
-                <div class="truck-icon"><i class="fa-solid fa-truck-fast"></i></div>
-            </div>
-
-            <div class="map-pin destination">
-                <div class="pin-dot" style="background:var(--text-muted); box-shadow: 0 0 0 4px rgba(139,146,155,0.3);"></div>
-                <div class="pin-label" style="color:var(--text-muted);">Destino</div>
-            </div>
+        <div class="status-badge">
+            <i class="fa-solid fa-circle"></i> En transito
         </div>
-
-        <div class="stats-grid">
-            <div class="stat-card">
-                <i class="fa-regular fa-clock"></i>
-                <p>ETA</p>
-                <h4>Hoy</h4>
-                <span>+ 30 min</span>
-            </div>
-            <div class="stat-card">
-                <i class="fa-solid fa-route"></i>
-                <p>Distancia</p>
-                <h4>68 km</h4>
-                <span>de 124 km</span>
-            </div>
-            <div class="stat-card">
-                <i class="fa-solid fa-stopwatch"></i>
-                <p>Tiempo rest.</p>
-                <h4>1h 20m</h4>
-                <span>aprox.</span>
-            </div>
-        </div>
-
-        <div class="driver-card">
-            <div class="driver-left">
-                <div class="driver-avatar">
-                    <i class="fa-solid fa-user" style="color:var(--text-muted); font-size: 24px;"></i>
-                </div>
-                <div class="driver-info">
-                    <p class="label">Conductor</p>
-                    <h4>Carlos Mendoza</h4>
-                    <p class="vehicle">
-                        <i class="fa-solid fa-truck"></i> Volvo FH 440 
-                        <span class="plate-badge">M-5678</span>
-                    </p>
-                </div>
-            </div>
-            <button class="btn-call" onclick="alert('Llamando a Carlos Mendoza...')"><i class="fa-solid fa-phone"></i></button>
-        </div>
-
-        <div class="timeline-card">
-            <div class="timeline">
-                <div class="timeline-line"></div>
-                <div class="timeline-progress"></div>
-                
-                <div class="step completed">
-                    <div class="step-icon"><i class="fa-solid fa-file-lines"></i></div>
-                    <h5>Solicitud<br>creada</h5>
-                    <p>09:00</p>
-                </div>
-                <div class="step completed">
-                    <div class="step-icon"><i class="fa-solid fa-user-check"></i></div>
-                    <h5>Asignado</h5>
-                    <p>09:15</p>
-                </div>
-                <div class="step completed">
-                    <div class="step-icon"><i class="fa-solid fa-box"></i></div>
-                    <h5>En recogida</h5>
-                    <p>10:45</p>
-                </div>
-                <div class="step active">
-                    <div class="step-icon"><i class="fa-solid fa-truck-fast"></i></div>
-                    <h5>En tránsito</h5>
-                    <p>Ahora</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="section-header">
-            <h3><i class="fa-solid fa-shield-halved"></i> Evidencias</h3>
-            <i class="fa-solid fa-chevron-right" style="color:var(--text-muted); font-size:12px;"></i>
-        </div>
-        <div class="evidences-grid">
-            <div class="evidence-card">
-                <div class="evidence-img"><i class="fa-solid fa-boxes-stacked"></i></div>
-                <div class="evidence-info">
-                    <h5>Foto de recogida</h5>
-                    <p>22 may 2025, 10:50</p>
-                    <span class="badge-verified"><i class="fa-solid fa-check"></i> Verificada</span>
-                </div>
-            </div>
-            <div class="evidence-card">
-                <div class="evidence-img"><i class="fa-solid fa-file-signature"></i></div>
-                <div class="evidence-info">
-                    <h5>Guía / Evidencia</h5>
-                    <p>22 may 2025, 11:00</p>
-                    <span class="badge-verified"><i class="fa-solid fa-check"></i> Verificada</span>
-                </div>
-            </div>
-        </div>
-
-        <div class="price-box">
-            <div class="price-left">
-                <div class="price-icon">C$</div>
-                <div class="price-details">
-                    <p class="label">Valor del servicio</p>
-                    <h3>C$ 4,850</h3>
-                    <p class="desc">Mercancía general • 8.5 T</p>
-                </div>
-            </div>
-            <a href="#" class="btn-link">Ver detalles <i class="fa-solid fa-chevron-right" style="font-size:10px;"></i></a>
-        </div>
-
-        <button class="btn-report" onclick="alert('Abriendo formulario de soporte...')">
-            <i class="fa-solid fa-triangle-exclamation"></i> Reportar incidencia
-        </button>
-
-        <nav class="bottom-nav">
-            <div class="nav-item" onclick="window.location.href='dashboard.html'">
-                <i class="fa-solid fa-house"></i>
-                <span>Inicio</span>
-            </div>
-            <div class="nav-item">
-                <i class="fa-solid fa-truck"></i>
-                <span>Viajes</span>
-            </div>
-            <div class="nav-item prominent">
-                <i class="fa-solid fa-location-dot"></i>
-                <span>Tracking</span>
-            </div>
-            <div class="nav-item">
-                <i class="fa-regular fa-user"></i>
-                <span>Perfil</span>
-            </div>
-        </nav>
-
     </div>
 
+    <!-- MAPA INTERACTIVO CON CANVAS -->
+    <div class="map-wrapper">
+        <canvas id="mapCanvas"></canvas>
+
+        <div class="map-controls">
+            <button class="map-ctrl-btn" onclick="zoomMap(1.2)" title="Acercar"><i class="fa-solid fa-plus"></i></button>
+            <button class="map-ctrl-btn" onclick="zoomMap(0.8)" title="Alejar"><i class="fa-solid fa-minus"></i></button>
+            <button class="map-ctrl-btn" onclick="resetMapView()" title="Centrar"><i class="fa-solid fa-crosshairs"></i></button>
+        </div>
+
+        <div class="map-speed-badge">
+            <div class="speed-dot"></div>
+            <span id="speedDisplay">72 km/h</span>
+        </div>
+
+        <div class="map-progress-badge" id="progressBadge">55% completado</div>
+    </div>
+
+    <!-- Barra de progreso de ruta -->
+    <div class="route-progress-bar" style="margin: 0 20px; border-radius: 0 0 16px 16px; border: 1px solid var(--border-color); border-top: none;">
+        <span class="route-label">Managua</span>
+        <div class="progress-track">
+            <div class="progress-fill" id="routeProgressFill"></div>
+        </div>
+        <span class="route-label">Leon</span>
+    </div>
+
+    <div class="stats-grid">
+        <div class="stat-card">
+            <i class="fa-regular fa-clock"></i>
+            <p>ETA</p>
+            <h4>Hoy</h4>
+            <span>+ 30 min</span>
+        </div>
+        <div class="stat-card">
+            <i class="fa-solid fa-route"></i>
+            <p>Distancia</p>
+            <h4>68 km</h4>
+            <span>de 124 km</span>
+        </div>
+        <div class="stat-card">
+            <i class="fa-solid fa-stopwatch"></i>
+            <p>Tiempo rest.</p>
+            <h4 id="timerDisplay">1h 20m</h4>
+            <span>aprox.</span>
+        </div>
+    </div>
+
+    <div class="driver-card">
+        <div class="driver-left">
+            <div class="driver-avatar">
+                <i class="fa-solid fa-user" style="color:var(--text-muted); font-size:22px;"></i>
+            </div>
+            <div class="driver-info">
+                <p class="label">Conductor</p>
+                <h4>Carlos Mendoza</h4>
+                <p class="vehicle">
+                    <i class="fa-solid fa-truck"></i> Volvo FH 440
+                    <span class="plate-badge">M-5678</span>
+                </p>
+            </div>
+        </div>
+        <div class="driver-actions">
+            <button class="btn-chat" onclick="showToast('Chat con Carlos Mendoza...')"><i class="fa-regular fa-comment"></i></button>
+            <button class="btn-call" onclick="showToast('Llamando a Carlos Mendoza...')"><i class="fa-solid fa-phone"></i></button>
+        </div>
+    </div>
+
+    <div class="timeline-card">
+        <div class="timeline">
+            <div class="timeline-line"></div>
+            <div class="timeline-progress-line"></div>
+            <div class="step completed">
+                <div class="step-icon"><i class="fa-solid fa-file-lines"></i></div>
+                <h5>Solicitud<br>creada</h5>
+                <p>09:00</p>
+            </div>
+            <div class="step completed">
+                <div class="step-icon"><i class="fa-solid fa-user-check"></i></div>
+                <h5>Asignado</h5>
+                <p>09:15</p>
+            </div>
+            <div class="step completed">
+                <div class="step-icon"><i class="fa-solid fa-box"></i></div>
+                <h5>En recogida</h5>
+                <p>10:45</p>
+            </div>
+            <div class="step active">
+                <div class="step-icon"><i class="fa-solid fa-truck-fast"></i></div>
+                <h5>En transito</h5>
+                <p>Ahora</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="section-header">
+        <h3><i class="fa-solid fa-shield-halved"></i> Evidencias</h3>
+        <i class="fa-solid fa-chevron-right" style="color:var(--text-muted); font-size:12px; cursor:pointer;"></i>
+    </div>
+    <div class="evidences-grid">
+        <div class="evidence-card" onclick="showToast('Abriendo foto de recogida...')">
+            <div class="evidence-img"><i class="fa-solid fa-boxes-stacked"></i></div>
+            <div class="evidence-info">
+                <h5>Foto de recogida</h5>
+                <p>22 may 2025, 10:50</p>
+                <span class="badge-verified"><i class="fa-solid fa-check"></i> Verificada</span>
+            </div>
+        </div>
+        <div class="evidence-card" onclick="showToast('Abriendo guia de evidencia...')">
+            <div class="evidence-img"><i class="fa-solid fa-file-signature"></i></div>
+            <div class="evidence-info">
+                <h5>Guia / Evidencia</h5>
+                <p>22 may 2025, 11:00</p>
+                <span class="badge-verified"><i class="fa-solid fa-check"></i> Verificada</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="price-box">
+        <div class="price-left">
+            <div class="price-icon">C$</div>
+            <div class="price-details">
+                <p class="label">Valor del servicio</p>
+                <h3>C$ 4,850</h3>
+                <p class="desc">Mercancia general  8.5 T</p>
+            </div>
+        </div>
+        <a href="#" class="btn-link" onclick="showToast('Cargando detalles...')">Ver detalles <i class="fa-solid fa-chevron-right" style="font-size:10px;"></i></a>
+    </div>
+
+    <button class="btn-report" onclick="showToast('Abriendo formulario de soporte...')">
+        <i class="fa-solid fa-triangle-exclamation"></i> Reportar incidencia
+    </button>
+
+    <nav class="bottom-nav">
+        <div class="nav-item" onclick="window.location.href='dashboard.html'">
+            <i class="fa-solid fa-house"></i>
+            <span>Inicio</span>
+        </div>
+        <div class="nav-item" onclick="showToast('Seccion de Viajes')">
+            <i class="fa-solid fa-truck"></i>
+            <span>Viajes</span>
+        </div>
+        <div class="nav-item prominent">
+            <i class="fa-solid fa-location-dot"></i>
+            <span>Tracking</span>
+        </div>
+        <div class="nav-item" onclick="showToast('Seccion de Perfil')">
+            <i class="fa-regular fa-user"></i>
+            <span>Perfil</span>
+        </div>
+    </nav>
+</div>
+
+<!-- Toast notification -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ============================================
+// TOAST SYSTEM
+// ============================================
+function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// ============================================
+// CANVAS MAP ENGINE
+// ============================================
+const canvas = document.getElementById('mapCanvas');
+const ctx = canvas.getContext('2d');
+
+let mapZoom = 1;
+let mapOffsetX = 0;
+let mapOffsetY = 0;
+let truckT = 0.55; // posicion a lo largo de la ruta (0-1)
+let truckSpeed = 0.0008;
+let animFrame;
+let particles = [];
+let trailPoints = [];
+const MAX_TRAIL = 40;
+
+// Definicion de la ruta curva bezier (en coordenadas normalizadas 0-1)
+const routeStart = { x: 0.12, y: 0.75 };
+const routeCtrl1 = { x: 0.30, y: 0.20 };
+const routeCtrl2 = { x: 0.65, y: 0.15 };
+const routeEnd   = { x: 0.88, y: 0.30 };
+
+// Ciudades de referencia (puntos en el mapa)
+const cityPoints = [
+    { x: 0.12, y: 0.75, name: 'Managua', major: true },
+    { x: 0.88, y: 0.30, name: 'Leon', major: true },
+    { x: 0.35, y: 0.55, name: 'Tipitapa', major: false },
+    { x: 0.60, y: 0.42, name: 'Mateare', major: false },
+];
+
+// Calles secundarias simuladas
+const streets = [
+    [{x:0.0,y:0.45},{x:1.0,y:0.48}],
+    [{x:0.0,y:0.65},{x:1.0,y:0.62}],
+    [{x:0.0,y:0.82},{x:1.0,y:0.80}],
+    [{x:0.25,y:0.0},{x:0.22,y:1.0}],
+    [{x:0.50,y:0.0},{x:0.52,y:1.0}],
+    [{x:0.75,y:0.0},{x:0.74,y:1.0}],
+    [{x:0.0,y:0.30},{x:0.45,y:0.20},{x:1.0,y:0.25}],
+    [{x:0.15,y:1.0},{x:0.40,y:0.55},{x:0.70,y:0.60},{x:1.0,y:0.55}],
+];
+
+// Obtener punto en bezier cubica
+function getBezierPoint(t) {
+    const mt = 1 - t;
+    return {
+        x: mt*mt*mt*routeStart.x + 3*mt*mt*t*routeCtrl1.x + 3*mt*t*t*routeCtrl2.x + t*t*t*routeEnd.x,
+        y: mt*mt*mt*routeStart.y + 3*mt*mt*t*routeCtrl1.y + 3*mt*t*t*routeCtrl2.y + t*t*t*routeEnd.y
+    };
+}
+
+// Angulo de la tangente
+function getBezierAngle(t) {
+    const dt = 0.01;
+    const p1 = getBezierPoint(Math.max(0, t - dt));
+    const p2 = getBezierPoint(Math.min(1, t + dt));
+    return Math.atan2(p2.y - p1.y, p2.x - p1.x);
+}
+
+function worldToCanvas(nx, ny) {
+    const W = canvas.width;
+    const H = canvas.height;
+    return {
+        x: (nx * W + mapOffsetX) * mapZoom + W/2 * (1 - mapZoom),
+        y: (ny * H + mapOffsetY) * mapZoom + H/2 * (1 - mapZoom)
+    };
+}
+
+function resizeCanvas() {
+    const rect = canvas.parentElement.getBoundingClientRect();
+    canvas.width = rect.width;
+    canvas.height = 260;
+}
+
+// Particulas de escape del camion
+function spawnParticle(x, y) {
+    particles.push({
+        x, y,
+        vx: (Math.random() - 0.5) * 1.5,
+        vy: -Math.random() * 1.2 - 0.3,
+        alpha: 0.7,
+        size: Math.random() * 3 + 1,
+        life: 0
+    });
+}
+
+function drawMap() {
+    const W = canvas.width;
+    const H = canvas.height;
+
+    // Background
+    ctx.fillStyle = '#13171b';
+    ctx.fillRect(0, 0, W, H);
+
+    // Bloques de ciudad / terreno (rectangulos aleatorios pero consistentes)
+    const blocks = [
+        {x:0.05,y:0.60,w:0.12,h:0.08,c:'#1a1e22'},
+        {x:0.20,y:0.50,w:0.08,h:0.12,c:'#171b1f'},
+        {x:0.40,y:0.38,w:0.10,h:0.07,c:'#1a1e22'},
+        {x:0.55,y:0.55,w:0.09,h:0.10,c:'#171b1f'},
+        {x:0.70,y:0.35,w:0.08,h:0.09,c:'#1a1e22'},
+        {x:0.78,y:0.18,w:0.14,h:0.16,c:'#171b1f'},
+        {x:0.08,y:0.82,w:0.18,h:0.12,c:'#1a1e22'},
+        {x:0.30,y:0.70,w:0.10,h:0.08,c:'#191d21'},
+        {x:0.60,y:0.68,w:0.12,h:0.07,c:'#171b1f'},
+    ];
+
+    blocks.forEach(b => {
+        const p1 = worldToCanvas(b.x, b.y);
+        const p2 = worldToCanvas(b.x + b.w, b.y + b.h);
+        ctx.fillStyle = b.c;
+        ctx.fillRect(p1.x, p1.y, p2.x - p1.x, p2.y - p1.y);
+    });
+
+    // Grid fino
+    ctx.strokeStyle = 'rgba(42,46,51,0.5)';
+    ctx.lineWidth = 0.5;
+    for(let gx = 0; gx <= 1; gx += 0.05) {
+        const p = worldToCanvas(gx, 0);
+        const pe = worldToCanvas(gx, 1);
+        ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(pe.x, pe.y); ctx.stroke();
+    }
+    for(let gy = 0; gy <= 1; gy += 0.05) {
+        const p = worldToCanvas(0, gy);
+        const pe = worldToCanvas(1, gy);
+        ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(pe.x, pe.y); ctx.stroke();
+    }
+
+    // Calles secundarias
+    streets.forEach(pts => {
+        ctx.strokeStyle = 'rgba(50,57,65,0.8)';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        const sp = worldToCanvas(pts[0].x, pts[0].y);
+        ctx.moveTo(sp.x, sp.y);
+        for(let i = 1; i < pts.length; i++) {
+            const cp = worldToCanvas(pts[i].x, pts[i].y);
+            ctx.lineTo(cp.x, cp.y);
+        }
+        ctx.stroke();
+    });
+
+    // Ruta principal - sombra azul
+    ctx.save();
+    ctx.shadowColor = 'rgba(59,130,246,0.3)';
+    ctx.shadowBlur = 12;
+    ctx.strokeStyle = 'rgba(59,130,246,0.2)';
+    ctx.lineWidth = 10;
+    ctx.beginPath();
+    const rs = worldToCanvas(routeStart.x, routeStart.y);
+    const rc1 = worldToCanvas(routeCtrl1.x, routeCtrl1.y);
+    const rc2 = worldToCanvas(routeCtrl2.x, routeCtrl2.y);
+    const re = worldToCanvas(routeEnd.x, routeEnd.y);
+    ctx.moveTo(rs.x, rs.y);
+    ctx.bezierCurveTo(rc1.x, rc1.y, rc2.x, rc2.y, re.x, re.y);
+    ctx.stroke();
+    ctx.restore();
+
+    // Ruta principal - cuerpo de la calle
+    ctx.strokeStyle = '#2a3040';
+    ctx.lineWidth = 6;
+    ctx.lineCap = 'round';
+    ctx.beginPath();
+    ctx.moveTo(rs.x, rs.y);
+    ctx.bezierCurveTo(rc1.x, rc1.y, rc2.x, rc2.y, re.x, re.y);
+    ctx.stroke();
+
+    // Ruta recorrida (desde inicio hasta posicion actual)
+    drawPartialBezier(0, truckT, '#3b82f6', 4);
+
+    // Ruta pendiente (desde posicion actual hasta destino)
+    drawPartialBezier(truckT, 1, 'rgba(59,130,246,0.25)', 3);
+
+    // Linea punteada en la ruta pendiente
+    ctx.save();
+    ctx.setLineDash([6, 6]);
+    ctx.lineDashOffset = -Date.now() * 0.03 % 12;
+    drawPartialBezier(truckT, 1, 'rgba(96,165,250,0.4)', 2);
+    ctx.restore();
+    ctx.setLineDash([]);
+
+    // Trail del camion
+    if(trailPoints.length > 1) {
+        for(let i = 1; i < trailPoints.length; i++) {
+            const alpha = (i / trailPoints.length) * 0.6;
+            const size = (i / trailPoints.length) * 3;
+            ctx.beginPath();
+            ctx.arc(trailPoints[i].x, trailPoints[i].y, size, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(96,165,250,${alpha})`;
+            ctx.fill();
+        }
+    }
+
+    // Particulas
+    particles = particles.filter(p => p.alpha > 0);
+    particles.forEach(p => {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size * (1 - p.life), 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(150,180,220,${p.alpha})`;
+        ctx.fill();
+        p.x += p.vx;
+        p.y += p.vy;
+        p.alpha -= 0.025;
+        p.life += 0.04;
+    });
+
+    // Pin de ORIGEN
+    const originPt = worldToCanvas(routeStart.x, routeStart.y);
+    drawPinOrigin(originPt.x, originPt.y, 'Managua');
+
+    // Pin de DESTINO
+    const destPt = worldToCanvas(routeEnd.x, routeEnd.y);
+    drawPinDestino(destPt.x, destPt.y, 'Leon');
+
+    // Ciudades menores
+    cityPoints.filter(c => !c.major).forEach(c => {
+        const cp = worldToCanvas(c.x, c.y);
+        ctx.beginPath();
+        ctx.arc(cp.x, cp.y, 3, 0, Math.PI*2);
+        ctx.fillStyle = 'rgba(139,146,155,0.6)';
+        ctx.fill();
+        ctx.font = '9px Inter, sans-serif';
+        ctx.fillStyle = 'rgba(139,146,155,0.7)';
+        ctx.textAlign = 'center';
+        ctx.fillText(c.name, cp.x, cp.y - 7);
+    });
+
+    // Camion animado
+    const truckPt = getBezierPoint(truckT);
+    const truckAngle = getBezierAngle(truckT);
+    const tp = worldToCanvas(truckPt.x, truckPt.y);
+    drawTruck(tp.x, tp.y, truckAngle);
+}
+
+function drawPartialBezier(t0, t1, color, lineW) {
+    const steps = 40;
+    ctx.strokeStyle = color;
+    ctx.lineWidth = lineW;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.beginPath();
+    for(let i = 0; i <= steps; i++) {
+        const t = t0 + (t1 - t0) * (i / steps);
+        const pt = getBezierPoint(t);
+        const cp = worldToCanvas(pt.x, pt.y);
+        if(i === 0) ctx.moveTo(cp.x, cp.y);
+        else ctx.lineTo(cp.x, cp.y);
+    }
+    ctx.stroke();
+}
+
+function drawPinOrigin(x, y, label) {
+    const pulse = 0.5 + 0.5 * Math.sin(Date.now() * 0.003);
+
+    // Anillo pulsante
+    ctx.beginPath();
+    ctx.arc(x, y, 14 + pulse * 6, 0, Math.PI * 2);
+    ctx.strokeStyle = `rgba(59,130,246,${0.15 + pulse * 0.1})`;
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.arc(x, y, 9, 0, Math.PI * 2);
+    ctx.strokeStyle = `rgba(59,130,246,0.4)`;
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    // Punto central
+    ctx.beginPath();
+    ctx.arc(x, y, 5, 0, Math.PI * 2);
+    ctx.fillStyle = '#3b82f6';
+    ctx.fill();
+
+    // Label
+    ctx.fillStyle = 'rgba(28,31,34,0.9)';
+    const tw = ctx.measureText(label).width + 16;
+    roundRect(ctx, x - tw/2, y + 14, tw, 18, 5);
+    ctx.fill();
+    ctx.strokeStyle = 'rgba(59,130,246,0.5)';
+    ctx.lineWidth = 1;
+    roundRect(ctx, x - tw/2, y + 14, tw, 18, 5);
+    ctx.stroke();
+    ctx.font = 'bold 9px Inter, sans-serif';
+    ctx.fillStyle = '#ffffff';
+    ctx.textAlign = 'center';
+    ctx.fillText(label, x, y + 27);
+}
+
+function drawPinDestino(x, y, label) {
+    // Anillo estatico gris
+    ctx.beginPath();
+    ctx.arc(x, y, 9, 0, Math.PI * 2);
+    ctx.strokeStyle = 'rgba(139,146,155,0.4)';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    // Punto central
+    ctx.beginPath();
+    ctx.arc(x, y, 5, 0, Math.PI * 2);
+    ctx.fillStyle = '#8b929b';
+    ctx.fill();
+
+    // Label
+    ctx.fillStyle = 'rgba(28,31,34,0.9)';
+    const tw = ctx.measureText(label).width + 16;
+    roundRect(ctx, x - tw/2, y + 14, tw, 18, 5);
+    ctx.fill();
+    ctx.strokeStyle = 'rgba(139,146,155,0.4)';
+    ctx.lineWidth = 1;
+    roundRect(ctx, x - tw/2, y + 14, tw, 18, 5);
+    ctx.stroke();
+    ctx.font = 'bold 9px Inter, sans-serif';
+    ctx.fillStyle = 'rgba(200,200,200,0.9)';
+    ctx.textAlign = 'center';
+    ctx.fillText(label, x, y + 27);
+}
+
+function drawTruck(x, y, angle) {
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.rotate(angle);
+
+    // Sombra del camion
+    ctx.shadowColor = 'rgba(59,130,246,0.5)';
+    ctx.shadowBlur = 14;
+
+    // Circulo exterior pulsante
+    const pulse2 = 0.5 + 0.5 * Math.sin(Date.now() * 0.005);
+    ctx.beginPath();
+    ctx.arc(0, 0, 18 + pulse2 * 3, 0, Math.PI * 2);
+    ctx.strokeStyle = `rgba(59,130,246,${0.15 + pulse2 * 0.1})`;
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    // Circulo del camion
+    ctx.beginPath();
+    ctx.arc(0, 0, 14, 0, Math.PI * 2);
+    ctx.fillStyle = '#1c1f22';
+    ctx.fill();
+    ctx.strokeStyle = '#3b82f6';
+    ctx.lineWidth = 2.5;
+    ctx.stroke();
+
+    ctx.restore();
+    ctx.shadowBlur = 0;
+
+    // Icono del camion (dibujado separado para no rotar el texto)
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.rotate(angle);
+    // Silueta simple de camion con canvas
+    ctx.fillStyle = '#ffffff';
+    ctx.font = 'bold 12px "Font Awesome 6 Free"';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('\uf48b', 0, 0); // fa-truck-fast unicode
+    ctx.restore();
+}
+
+function roundRect(ctx, x, y, w, h, r) {
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.lineTo(x + w - r, y);
+    ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+    ctx.lineTo(x + w, y + h - r);
+    ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+    ctx.lineTo(x + r, y + h);
+    ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+    ctx.lineTo(x, y + r);
+    ctx.quadraticCurveTo(x, y, x + r, y);
+    ctx.closePath();
+}
+
+// Velocidad variable simulada
+let speedTimer = 0;
+let displaySpeed = 72;
+let targetSpeed = 72;
+
+function updateSpeed() {
+    speedTimer++;
+    if(speedTimer % 180 === 0) {
+        targetSpeed = 55 + Math.floor(Math.random() * 35);
+    }
+    displaySpeed += (targetSpeed - displaySpeed) * 0.01;
+    document.getElementById('speedDisplay').textContent = Math.round(displaySpeed) + ' km/h';
+}
+
+function animate() {
+    resizeCanvas();
+
+    // Mover camion hacia adelante
+    truckT += truckSpeed;
+    if(truckT > 0.95) truckT = 0.10; // loop demo
+
+    // Trail
+    const tp = getBezierPoint(truckT);
+    const tpCanvas = worldToCanvas(tp.x, tp.y);
+    trailPoints.push({ x: tpCanvas.x, y: tpCanvas.y });
+    if(trailPoints.length > MAX_TRAIL) trailPoints.shift();
+
+    // Particulas ocasionales
+    if(Math.random() < 0.2) {
+        spawnParticle(tpCanvas.x, tpCanvas.y);
+    }
+
+    // Actualizar progreso
+    const pct = Math.round(truckT * 100);
+    document.getElementById('progressBadge').textContent = pct + '% completado';
+    document.getElementById('routeProgressFill').style.width = pct + '%';
+
+    updateSpeed();
+    drawMap();
+    animFrame = requestAnimationFrame(animate);
+}
+
+// Zoom
+function zoomMap(factor) {
+    mapZoom = Math.max(0.6, Math.min(2.5, mapZoom * factor));
+    showToast('Zoom: ' + Math.round(mapZoom * 100) + '%');
+}
+
+function resetMapView() {
+    mapZoom = 1;
+    mapOffsetX = 0;
+    mapOffsetY = 0;
+    showToast('Vista centrada');
+}
+
+// Drag para mover el mapa
+let isDragging = false;
+let dragStart = { x: 0, y: 0 };
+let dragOffset = { x: 0, y: 0 };
+
+canvas.addEventListener('mousedown', e => {
+    isDragging = true;
+    dragStart.x = e.clientX - mapOffsetX;
+    dragStart.y = e.clientY - mapOffsetY;
+});
+canvas.addEventListener('mousemove', e => {
+    if(!isDragging) return;
+    mapOffsetX = e.clientX - dragStart.x;
+    mapOffsetY = e.clientY - dragStart.y;
+});
+canvas.addEventListener('mouseup', () => isDragging = false);
+canvas.addEventListener('mouseleave', () => isDragging = false);
+
+canvas.addEventListener('touchstart', e => {
+    isDragging = true;
+    dragStart.x = e.touches[0].clientX - mapOffsetX;
+    dragStart.y = e.touches[0].clientY - mapOffsetY;
+}, {passive: true});
+canvas.addEventListener('touchmove', e => {
+    if(!isDragging) return;
+    mapOffsetX = e.touches[0].clientX - dragStart.x;
+    mapOffsetY = e.touches[0].clientY - dragStart.y;
+}, {passive: true});
+canvas.addEventListener('touchend', () => isDragging = false);
+
+// Scroll para zoom en desktop
+canvas.addEventListener('wheel', e => {
+    e.preventDefault();
+    zoomMap(e.deltaY < 0 ? 1.1 : 0.9);
+}, {passive: false});
+
+// Iniciar
+resizeCanvas();
+animate();
+window.addEventListener('resize', () => { resizeCanvas(); trailPoints = []; });
+</script>
 </body>
 </html>

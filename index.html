@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#07123b">
-<title>INCOEX · Escáner AR 3D + OpenCV</title>
+<title>INCOEX · Medición con cámara Safari y Android</title>
 <style>
 :root{--bg:#07133d;--glass:rgba(10,29,76,.53);--glass-border:rgba(153,200,255,.33);--blue:#075ef3;--cyan:#02a5fc;--white:#f7faff;--mute:#bacbec;--dark:#06123a;--safe:#65e7ba;--warn:#ffcf87}
 *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;min-height:100vh;color:var(--white);font-family:Inter,ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;background:#03091b; -webkit-font-smoothing:antialiased}button,select,input{font:inherit}button{cursor:pointer}button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid #8bc9ff;outline-offset:2px}
@@ -183,7 +183,7 @@
   </div>
   <div class="photos"><div class="section-top" style="margin:0"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.7"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8" cy="9" r="2"/><path d="m4 18 6-6 4 4 3-3 4 4"/></svg>Fotos del paquete</div><button id="addPhoto" type="button">+ Agregar foto</button><input id="photoInput" type="file" accept="image/*" style="display:none" multiple></div>
   <div id="photoList" class="preview-photos"></div>
-<div class="photo-assist" id="photoAssist"><div class="assist-copy"><strong>📷 Análisis de foto · OpenCV</strong><span id="assistMessage">Subí una foto desde arriba con una hoja A4 al lado del paquete. OpenCV intentará detectar ambos.</span></div><button type="button" id="analyzePhoto" disabled>Analizar foto</button><button type="button" class="ar-button" id="openAR">▣ Medir en 3D con cámara</button></div>
+<div class="photo-assist" id="photoAssist"><div class="assist-copy"><strong>📷 Análisis de foto · OpenCV</strong><span id="assistMessage">Subí una foto desde arriba con una hoja A4 al lado del paquete. OpenCV intentará detectar ambos.</span></div><button type="button" id="analyzePhoto" disabled>Analizar foto</button><button type="button" class="ar-button" id="openAR">▣ Medir con cámara · iPhone / Android</button></div>
 <div class="photo-result" id="photoResult"></div>
  </div>
  <footer class="bottom"><button class="next" id="next">Siguiente</button></footer>
@@ -196,7 +196,7 @@
   <div class="ar-preview"><div class="ar-preview-icon">▣</div><div><strong>Apuntá a los bordes del paquete</strong><small>Mové el celular lentamente. Marcá dos puntos para largo, dos para ancho y dos para alto. Las marcas se dibujarán sobre la cámara en 3D.</small></div></div>
   <div class="ar-state" id="arSupport" role="status">Comprobando compatibilidad de realidad aumentada…</div>
   <ol class="ar-guide"><li>Colocá el paquete sobre una mesa o piso bien iluminado.</li><li>Mové la cámara para que reconozca las superficies.</li><li>Apuntá al primer extremo y tocá «Marcar punto»; repetí en el segundo extremo.</li><li>Verificá las medidas antes de usarlas para cotizar.</li></ol>
-  <div class="ar-launch-actions"><button type="button" class="ar-btn primary" id="arStart" disabled>Iniciar cámara 3D (AR)</button><button type="button" class="ar-btn" id="arUsePhoto">Usar foto + A4</button><button type="button" class="ar-btn" id="arCancel">Cancelar</button></div>
+  <div class="ar-launch-actions"><button type="button" class="ar-btn primary" id="arStart" disabled>Iniciar cámara 3D (AR)</button><button type="button" class="ar-btn primary" id="safariLaunch">📷 Medir desde Safari</button><button type="button" class="ar-btn" id="arUsePhoto">Usar foto + A4</button><button type="button" class="ar-btn" id="arCancel">Cancelar</button></div>
   <p class="ar-note">Requiere HTTPS, Chrome en Android compatible con ARCore y permisos de cámara. En Safari de iPhone no está disponible WebXR inmersivo: la versión iOS de Flutter necesita ARKit. La medición 3D es asistida, no detecta automáticamente todos los bordes del producto ni calcula su peso.</p>
  </div>
 </div>
@@ -628,5 +628,188 @@ start.addEventListener('click',async()=>{
 });
 </script>
 
+
+<style id="incoexSafariStyles">
+/* INCOEX · Medición por dos vistas con cámara, iPhone Safari y Android */
+.saf-modal{position:fixed;inset:0;z-index:910;display:none;overflow:auto;-webkit-overflow-scrolling:touch;background:rgba(1,5,22,.94);backdrop-filter:blur(13px);padding:calc(env(safe-area-inset-top) + 10px) 12px calc(env(safe-area-inset-bottom) + 20px);color:white}
+.saf-modal.visible{display:block}
+.saf-card{max-width:440px;margin:auto;border:1px solid rgba(95,180,255,.65);border-radius:20px;background:linear-gradient(150deg,#143574,#071538 72%);padding:14px;box-shadow:0 24px 85px #0008}
+.saf-hd{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.saf-hd h2{margin:0;font-size:17px}.saf-mini{font-size:10px;color:#b4d0fb;line-height:1.5;margin:5px 0 10px}
+.saf-cross{padding:5px 11px;border:1px solid #618dd0;border-radius:9px;background:#153b79;color:white;font-size:20px}
+.saf-tabs{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin:11px 0}
+.saf-tab{border:1px solid #5274b5;background:#081e51;color:#caddfa;border-radius:10px;padding:10px 4px;font-size:11px;font-weight:750}
+.saf-tab.current{background:linear-gradient(110deg,#055ce9,#147cff);border-color:#69d1ff;color:white}
+.saf-tab.completed::before{content:'✓ ';color:#66eeca}
+.saf-help{padding:11px 12px;background:rgba(16,76,167,.33);border:1px solid #609bef75;border-radius:12px;font-size:11px;line-height:1.5;color:#e2efff;margin-bottom:10px}
+.saf-view{display:flex;justify-content:center;align-items:center;position:relative;min-height:175px;max-height:42dvh;background:#020915;border:1px solid #3872b3;border-radius:12px;overflow:hidden}
+.saf-view video,.saf-view canvas{display:none;max-width:100%;max-height:42dvh;width:auto;height:auto;touch-action:none;object-fit:contain}
+.saf-view video.active,.saf-view canvas.active{display:block}
+.saf-placeholder{font-size:12px;color:#b8cff7;text-align:center;padding:36px 12px;line-height:1.6}
+.saf-guide{font-size:10px;color:#caddfc;margin:8px 0;line-height:1.5}
+.saf-actions{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin:10px 0}
+.saf-btn{padding:11px 8px;border-radius:11px;border:1px solid #4d88d4;background:#143674;color:white;font-weight:750;font-size:11px;cursor:pointer;line-height:1.25}
+.saf-btn.primary{background:linear-gradient(110deg,#0966fa,#02a5fc);border-color:#77ceff}
+.saf-btn:disabled{opacity:.38;cursor:default}
+.saf-mark{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0}
+.saf-mark button{border:1px solid #5c83c6;border-radius:10px;background:#0c2a62;color:#dceafa;font-size:11px;font-weight:700;padding:10px}
+.saf-mark button.active{border-color:#66d6ff;background:#0755ab;color:white}
+.saf-stat{min-height:42px;border:1px solid #4e7ab4;border-radius:10px;background:rgba(3,14,48,.66);padding:10px;font-size:11px;line-height:1.6;color:#d9e7ff}
+.saf-stat.good{border-color:#54caae;color:#c6ffed}.saf-stat.warn{border-color:#e3a66c;color:#ffdfc4}
+.saf-result{border:1px solid #69c3fb70;border-radius:12px;background:rgba(24,101,218,.22);padding:11px;margin:10px 0}
+.saf-numbers{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;text-align:center;margin-top:8px}
+.saf-number{border:1px solid #5f9ef275;background:#0b2b66;border-radius:9px;padding:8px 3px}
+.saf-number span{font-size:10px;color:#aecfff;display:block}.saf-number strong{font-size:17px;display:block;margin-top:4px}
+.saf-disclaimer{font-size:10px;line-height:1.5;color:#b6cae8;margin:12px 0 2px}
+.saf-hidden{display:none!important}
+</style>
+
+<div id="safModal" class="saf-modal" role="dialog" aria-modal="true" aria-labelledby="safTitle">
+ <div class="saf-card">
+  <div class="saf-hd"><h2 id="safTitle">📷 Medición con cámara</h2><button id="safClose" class="saf-cross" type="button" aria-label="Cerrar">×</button></div>
+  <p class="saf-mini">Compatible con Safari en iPhone y Chrome en Android · No requiere WebXR</p>
+  <div class="saf-tabs"><button type="button" class="saf-tab current" id="safTop">1 · Vista superior</button><button type="button" class="saf-tab" id="safSide">2 · Vista lateral</button></div>
+  <div class="saf-help" id="safHelp">Poné una hoja A4 <strong>sobre la cara superior de la caja</strong>, alineada con sus bordes. Tomá la imagen completamente desde arriba, perpendicular al paquete. La hoja debe estar en el mismo plano que vas a medir.</div>
+  <div class="saf-view" id="safView">
+   <div class="saf-placeholder" id="safPlaceholder">Tocá «Abrir cámara». También podés elegir una fotografía de tu galería.</div>
+   <video id="safVideo" autoplay playsinline muted></video>
+   <canvas id="safCanvas" aria-label="Foto para marcar la hoja A4 y el paquete"></canvas>
+  </div>
+  <div class="saf-actions">
+   <button type="button" class="saf-btn primary" id="safOpenCamera">📷 Abrir cámara</button>
+   <button type="button" class="saf-btn" id="safCapture" disabled>Tomar foto</button>
+   <button type="button" class="saf-btn" id="safUpload">Galería / Foto</button>
+   <button type="button" class="saf-btn" id="safRetake">Repetir vista</button>
+   <input id="safFile" type="file" accept="image/*" capture="environment" style="display:none">
+  </div>
+  <div id="safMarkSection" class="saf-hidden">
+   <p class="saf-guide">Marcá cada objeto arrastrando desde una esquina hasta la opuesta sobre la foto. Podés corregirlo cuantas veces quieras.</p>
+   <div class="saf-mark"><button id="safMarkPaper" class="active" type="button">① Marcar hoja A4</button><button id="safMarkBox" type="button">② Marcar caja</button></div>
+  </div>
+  <div id="safStatus" class="saf-stat" role="status">Para empezar, permití el uso de la cámara.</div>
+  <div id="safResult" class="saf-result saf-hidden"><strong>Medidas aproximadas</strong><div class="saf-numbers"><div class="saf-number"><span>Largo</span><strong id="safLength">—</strong></div><div class="saf-number"><span>Ancho</span><strong id="safWidth">—</strong></div><div class="saf-number"><span>Alto</span><strong id="safHeight">—</strong></div></div></div>
+  <div class="saf-actions"><button type="button" id="safNext" class="saf-btn primary" disabled>Medir altura →</button><button type="button" id="safApply" class="saf-btn" disabled>Aplicar al formulario</button></div>
+  <p class="saf-disclaimer">Estimación geométrica, no escaneo AR espacial. Fotografías perpendiculares, hoja A4 completa y mismo plano/profundidad son necesarios. No determina peso ni contenido. Confirmá las medidas antes del envío.</p>
+ </div>
+</div>
+<script id="incoexSafariLogic">
+(()=>{
+'use strict';
+const $=id=>document.getElementById(id);
+const modal=$('safModal'),video=$('safVideo'),canvas=$('safCanvas'),ctx=canvas.getContext('2d',{willReadFrequently:false});
+const fallback=$('safFile');
+let stage=0,stream=null,tool='paper',drawing=null, currentPointer=null;
+const shots=[null,null],rectangles=[{paper:null,box:null},{paper:null,box:null}];
+let values=[null,null,null];
+const guidance=[
+ 'Poné una hoja A4 <strong>sobre la cara superior de la caja</strong>, alineada con sus bordes. Tomá la imagen completamente desde arriba, perpendicular al paquete. La hoja debe estar en el mismo plano que vas a medir.',
+ 'Colocá la hoja A4 <strong>vertical junto a la cara frontal de la caja</strong>, a igual distancia de la cámara. Fotografiala de frente (no desde arriba) para medir el alto.'
+];
+const numeric=x=>Number.isFinite(x)?x.toFixed(1)+' cm':'—';
+function status(s,kind=''){$('safStatus').textContent=s;$('safStatus').className='saf-stat '+kind;}
+function ready(){return !!(rectangles[stage].paper&&rectangles[stage].box&&shots[stage]);}
+function stopCamera(){if(stream){stream.getTracks().forEach(t=>t.stop());stream=null;}video.pause();video.srcObject=null;video.classList.remove('active');}
+function open(){modal.classList.add('visible');document.body.style.overflow='hidden';$('arLaunch').classList.remove('show');stage=0;renderStage();}
+function close(){stopCamera();modal.classList.remove('visible');document.body.style.overflow='';}
+$('safariLaunch').addEventListener('click',open);
+$('safClose').addEventListener('click',close);
+$('safTop').addEventListener('click',()=>{stage=0;renderStage();});
+$('safSide').addEventListener('click',()=>{stage=1;renderStage();});
+function select(t){tool=t;$('safMarkPaper').classList.toggle('active',t==='paper');$('safMarkBox').classList.toggle('active',t==='box');}
+$('safMarkPaper').addEventListener('click',()=>select('paper'));
+$('safMarkBox').addEventListener('click',()=>select('box'));
+function setView({photo=false,live=false}={}){
+ $('safPlaceholder').classList.toggle('saf-hidden',live||photo);
+ video.classList.toggle('active',live);canvas.classList.toggle('active',photo);
+ $('safMarkSection').classList.toggle('saf-hidden',!photo);
+ $('safCapture').disabled=!live;
+}
+function renderStage(){
+ stopCamera();drawing=null;currentPointer=null;
+ $('safHelp').innerHTML=guidance[stage];
+ $('safTop').className='saf-tab'+(stage===0?' current':'')+(values[0]!=null?' completed':'');
+ $('safSide').className='saf-tab'+(stage===1?' current':'')+(values[2]!=null?' completed':'');
+ select(rectangles[stage].paper?'box':'paper');
+ if(shots[stage]){showShot();status('Revisá las marcas y corregí si es necesario.','good');}
+ else{setView();status('Abrí la cámara o seleccioná una foto de esta vista.');}
+ redraw();updateButtons();
+}
+function updateButtons(){
+ $('safNext').disabled=stage!==0||!ready();
+ $('safNext').textContent=stage===0?'Medir altura →':'← Vista superior';
+ $('safApply').disabled=values.some(x=>x==null)||!Number.isFinite(values[0]+values[1]+values[2]);
+ $('safResult').classList.toggle('saf-hidden',values.every(x=>x==null));
+ $('safLength').textContent=numeric(values[0]);$('safWidth').textContent=numeric(values[1]);$('safHeight').textContent=numeric(values[2]);
+}
+function showShot(){const shot=shots[stage];if(!shot)return; canvas.width=shot.width;canvas.height=shot.height;setView({photo:true});redraw();}
+function redraw(){
+ const shot=shots[stage];if(!shot)return;
+ ctx.clearRect(0,0,canvas.width,canvas.height);ctx.drawImage(shot,0,0,canvas.width,canvas.height);
+ const drawBox=(r,color,label)=>{if(!r)return;ctx.save();ctx.strokeStyle=color;ctx.lineWidth=Math.max(2,canvas.width/400);ctx.setLineDash([Math.max(8,canvas.width/70),Math.max(4,canvas.width/180)]);ctx.strokeRect(r.x,r.y,r.w,r.h);ctx.setLineDash([]);ctx.font=`bold ${Math.max(14,canvas.width/44)}px system-ui`;ctx.fillStyle=color;ctx.fillText(label,r.x+5,Math.max(22,r.y-7));ctx.restore()};
+ drawBox(rectangles[stage].paper,'#4be4fc','A4');drawBox(rectangles[stage].box,'#75ffb1','PAQUETE');
+ if(drawing)drawBox(drawing,'#ffd479',tool==='paper'?'A4':'PAQUETE');
+}
+function toCanvasPoint(event){const r=canvas.getBoundingClientRect();if(!r.width||!r.height)return null;return{x:Math.max(0,Math.min(canvas.width,(event.clientX-r.left)*canvas.width/r.width)),y:Math.max(0,Math.min(canvas.height,(event.clientY-r.top)*canvas.height/r.height))}}
+canvas.addEventListener('pointerdown',e=>{if(!shots[stage])return;e.preventDefault();currentPointer=e.pointerId;const pt=toCanvasPoint(e);if(!pt)return;drawing={x:pt.x,y:pt.y,w:0,h:0,_sx:pt.x,_sy:pt.y};canvas.setPointerCapture(e.pointerId)});
+canvas.addEventListener('pointermove',e=>{if(currentPointer!==e.pointerId||!drawing)return;e.preventDefault();const pt=toCanvasPoint(e);if(!pt)return;drawing.x=Math.min(drawing._sx,pt.x);drawing.y=Math.min(drawing._sy,pt.y);drawing.w=Math.abs(drawing._sx-pt.x);drawing.h=Math.abs(drawing._sy-pt.y);redraw()});
+canvas.addEventListener('pointerup',e=>{if(currentPointer!==e.pointerId||!drawing)return;e.preventDefault();const rect={x:drawing.x,y:drawing.y,w:drawing.w,h:drawing.h};drawing=null;currentPointer=null;canvas.releasePointerCapture(e.pointerId);if(rect.w<18||rect.h<18){status('Arrastrá en diagonal para marcar todo el objeto.','warn');redraw();return}rectangles[stage][tool]=rect;if(tool==='paper')select('box'); else if(!rectangles[stage].paper)select('paper');calculate();redraw()});
+canvas.addEventListener('pointercancel',()=>{drawing=null;currentPointer=null;redraw()});
+function calculate(){
+ if(!ready()){status('Marcá primero la hoja A4 y después el paquete.');updateButtons();return;}
+ const a=rectangles[stage].paper,b=rectangles[stage].box;
+ // Vista superior: hoja de 21x29.7 cm sobre la MISMA cara superior del paquete.
+ // Vista lateral: hoja en el mismo plano vertical, marcando altura relativa.
+ const measures=stage===0?[b.w/a.w*21,b.h/a.h*29.7]:[b.h/a.h*29.7];
+ if(measures.some(x=>!Number.isFinite(x)||x<1||x>350)){status('Las medidas resultaron fuera de rango. Revisá las marcas y la orientación de la hoja.','warn');return;}
+ if(stage===0){values[0]=Math.round(measures[0]*10)/10;values[1]=Math.round(measures[1]*10)/10;
+ status(`Vista superior: ${numeric(values[0])} × ${numeric(values[1])}. Ahora medí la altura.`, 'good');}
+ else{values[2]=Math.round(measures[0]*10)/10;status(`Altura aproximada: ${numeric(values[2])}. Ya podés completar el formulario.`, 'good');}
+ updateButtons();
+}
+function takePhotoFrom(source){
+ let w=source.videoWidth||source.naturalWidth||source.width,h=source.videoHeight||source.naturalHeight||source.height;
+ if(!w||!h){status('La cámara todavía no está lista. Esperá un segundo y probá de nuevo.','warn');return;}
+ const max=1100,s=Math.min(1,max/Math.max(w,h));w=Math.round(w*s);h=Math.round(h*s);
+ const off=document.createElement('canvas');off.width=w;off.height=h;off.getContext('2d').drawImage(source,0,0,w,h);
+ shots[stage]=off;rectangles[stage]={paper:null,box:null};if(stage===0){values[0]=null;values[1]=null;}else values[2]=null;
+ stopCamera();select('paper');showShot();status('Foto lista. Marcá el rectángulo de la hoja A4 y luego el de la caja.');updateButtons();
+}
+async function startCamera(){
+ stopCamera();shots[stage]=null;rectangles[stage]={paper:null,box:null};if(stage===0){values[0]=null;values[1]=null;}else values[2]=null;setView();updateButtons();
+ if(!navigator.mediaDevices?.getUserMedia){status('Safari no permite cámara en este contexto. Abrí la página HTTPS en Safari o tocá «Galería / Foto».','warn');return;}
+ try{
+  status('Solicitando permiso para utilizar la cámara trasera…');
+  stream=await navigator.mediaDevices.getUserMedia({audio:false,video:{facingMode:{ideal:'environment'},width:{ideal:1280},height:{ideal:720}}});
+  video.srcObject=stream;await video.play();setView({live:true});status('Enfocá la hoja A4 y el paquete. Tocá «Tomar foto» cuando estén ambos en pantalla.','good');
+ }catch(e){stopCamera();setView();status(e.name==='NotAllowedError'?'No se concedió permiso de cámara. Activá Cámara para este sitio en Safari o usá «Galería / Foto».':'No se pudo abrir la cámara ('+(e.name||'error')+'). Probá el botón de galería.', 'warn');}
+}
+$('safOpenCamera').addEventListener('click',startCamera);
+$('safCapture').addEventListener('click',()=>takePhotoFrom(video));
+$('safUpload').addEventListener('click',()=>fallback.click());
+fallback.addEventListener('change',()=>{
+ const file=fallback.files?.[0];if(!file)return;
+ const url=URL.createObjectURL(file),img=new Image();
+ img.onload=()=>{takePhotoFrom(img);URL.revokeObjectURL(url);fallback.value='';};
+ img.onerror=()=>{status('No se pudo leer la foto. Seleccioná JPG o PNG.','warn');URL.revokeObjectURL(url);fallback.value='';};img.src=url;
+});
+$('safRetake').addEventListener('click',()=>{shots[stage]=null;rectangles[stage]={paper:null,box:null};if(stage===0){values[0]=null;values[1]=null;}else values[2]=null;stopCamera();setView();status('Vista reiniciada. Podés tomar otra fotografía.');updateButtons()});
+$('safNext').addEventListener('click',()=>{if(stage===0&&ready()){calculate();if(values[0]!=null){stage=1;renderStage()}}});
+$('safApply').addEventListener('click',()=>{
+ if(values.some(x=>x==null))return;
+ ['long','wide','high'].forEach((id,i)=>{const el=$(id);el.value=values[i].toFixed(1);el.dispatchEvent(new Event('input',{bubbles:true}));});
+ const result=$('photoResult');result.classList.add('show');result.textContent=`✓ Cámara Safari: medidas aproximadas ${values.map(numeric).join(' × ')}. Se aplicaron al formulario. Confirmá dimensiones y peso antes de continuar.`;
+ close();$('dimensionField').scrollIntoView({behavior:'smooth',block:'center'});
+});
+// iOS users can open the same Safari scanner directly from the main page.
+const trigger=$('openAR');if(trigger){
+ trigger.title='Safari: medición asistida de dos vistas; Android: AR si está disponible.';
+ trigger.addEventListener('click',e=>{if(!navigator.xr || /iPad|iPhone|iPod/i.test(navigator.userAgent)){
+  e.preventDefault();e.stopImmediatePropagation();open();
+ }},true);
+}
+window.addEventListener('pagehide',stopCamera);
+updateButtons();
+})();
+</script>
 </body>
 </html>
